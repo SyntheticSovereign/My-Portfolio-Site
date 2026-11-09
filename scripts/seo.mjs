@@ -15,6 +15,23 @@ const pages = [];
 
 const urls = pages.sort().map((p) => `  <url><loc>${new URL(p, site).href}</loc></url>`);
 writeFileSync(join(DIST, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join('\n')}\n</urlset>\n`);
-writeFileSync(join(DIST, 'robots.txt'), ['User-agent: *', 'Allow: /', '', `Sitemap: ${new URL('/sitemap.xml', site).href}`].join('\n') + '\n');
+const aiBots = [
+  'GPTBot', 'ChatGPT-User', 'OAI-SearchBot', 'ClaudeBot', 'Claude-User', 'Claude-SearchBot', 'anthropic-ai',
+  'Google-Extended', 'GoogleOther', 'Applebot-Extended', 'CCBot', 'PerplexityBot', 'Perplexity-User',
+  'Bytespider', 'Amazonbot', 'meta-externalagent', 'meta-externalfetcher', 'FacebookBot', 'cohere-ai',
+  'cohere-training-data-crawler', 'MistralAI-User', 'AI2Bot', 'Ai2Bot-Dolma', 'Diffbot', 'DuckAssistBot',
+  'YouBot', 'Timpibot', 'ImagesiftBot', 'Omgilibot', 'Omgili', 'PetalBot', 'PanguBot', 'Kangaroo Bot',
+  'img2dataset', 'Scrapy', 'webzio-extended', 'TikTokSpider',
+];
+const robots = [
+  ...aiBots.map((b) => `User-agent: ${b}`),
+  'Disallow: /',
+  '',
+  'User-agent: *',
+  'Allow: /',
+  '',
+  `Sitemap: ${new URL('/sitemap.xml', site).href}`,
+];
+writeFileSync(join(DIST, 'robots.txt'), robots.join('\n') + '\n');
 
 console.log(`seo: sitemap with ${pages.length} pages for ${site.origin}`);
