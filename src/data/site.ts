@@ -8,7 +8,7 @@ export const person = {
   scholar: 'https://scholar.google.com/citations?user=YSsWnuUAAAAJ',
   resume: '/Tanvir-Ahmed-Aadeef-Resume.pdf',
   lede:
-    'I write detections, attack them with adversary emulation, and keep only what fires. Elastic, Splunk and Sentinel, mapped to MITRE ATT&CK.',
+    'I break my own defences before attackers do, from endpoints to LLMs, and architect systems resilient to dynamic agentic attacks.',
 };
 
 export const counters = [
