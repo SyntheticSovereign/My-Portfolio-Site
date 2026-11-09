@@ -102,5 +102,5 @@ The best way to reach me is through the [contact section](https://tanvirahmedaad
 <br>
 
 <div align="center">
-<sub>© 2026 Tanvir Ahmed Aadeef. All rights reserved.</sub>
+<sub>© 2026 Tanvir Ahmed Aadeef. All rights reserved. No use, copying or AI training without permission. See <a href="LICENSE">LICENSE</a>.</sub>
 </div>
