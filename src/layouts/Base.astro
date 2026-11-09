@@ -21,7 +21,7 @@ const nav = [
   { href: `${base}#community`, label: 'Community' },
   { href: `${base}#contact`, label: 'Contact' },
 ];
-const ogImage = new URL('/og.png', Astro.site).href;
+const ogImage = new URL('/og.png?v=2', Astro.site).href;
 ---
 
 <!doctype html>
@@ -40,8 +40,8 @@ const ogImage = new URL('/og.png', Astro.site).href;
     {Astro.site && <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site).href} />}
     {Astro.site && <meta property="og:url" content={new URL(Astro.url.pathname, Astro.site).href} />}
     <meta property="og:image" content={ogImage} />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
+    <meta property="og:image:width" content="2400" />
+    <meta property="og:image:height" content="1260" />
     <meta property="og:image:alt" content="Tanvir Ahmed Aadeef, detection engineer in Melbourne, over a live network of hosts and SIEMs." />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:image" content={ogImage} />
