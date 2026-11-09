@@ -1,6 +1,6 @@
 <div align="center">
 
-<a href="https://tanvirahmedaadeef.com"><img src=".github/assets/banner.svg" alt="Tanvir Ahmed Aadeef, detection engineer" width="100%"></a>
+<a href="https://tanvirahmedaadeef.com"><img src=".github/assets/banner.svg" alt="Tanvir Ahmed Aadeef, detection and AI security engineer" width="100%"></a>
 
 <br>
 
@@ -12,7 +12,7 @@
 
 ## About
 
-My personal portfolio. I'm a detection engineer in Melbourne: I write detections in Elastic, Splunk and Sentinel, attack them with adversary emulation, and keep only what fires. This site is where my work, projects and background live in one place.
+My personal portfolio. I'm a detection and AI security engineer in Melbourne: I write detections in Elastic, Splunk and Sentinel, attack them with adversary emulation, keep only what fires, and build defences for the AI systems SOCs now rely on. This site is where my work, projects and background live in one place.
 
 <img src=".github/assets/home.png" alt="Home page with the live detection feed and the 3D network" width="100%">
 

@@ -1,6 +1,6 @@
 export const person = {
   name: 'Tanvir Ahmed Aadeef',
-  role: 'Detection engineer',
+  role: 'Detection & AI security engineer',
   place: 'Melbourne',
   email: 't.ahmedaadeef@gmail.com',
   linkedin: 'https://www.linkedin.com/in/tanvir-ahmed-aadeef/',
