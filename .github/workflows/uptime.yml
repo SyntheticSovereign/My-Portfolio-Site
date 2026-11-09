@@ -1,0 +1,22 @@
+name: Uptime
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check site
+        run: |
+          for url in https://tanvirahmedaadeef.com/ https://www.tanvirahmedaadeef.com/; do
+            code=$(curl -sL -o page.html -w '%{http_code}' --retry 3 --retry-delay 20 --max-time 30 "$url")
+            echo "$url $code"
+            [ "$code" = "200" ] || exit 1
+            grep -q 'Tanvir Ahmed Aadeef' page.html || exit 1
+          done
