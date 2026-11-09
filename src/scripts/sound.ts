@@ -30,13 +30,17 @@ export function setSound(on: boolean) {
 
 export function initSound() {
   enabled = read();
-  const unlock = () => {
+  const events = ['pointerdown', 'pointerup', 'touchend', 'click', 'keydown'];
+  const stop = () => events.forEach((e) => window.removeEventListener(e, unlock, true));
+  function unlock() {
     if (!enabled) return;
     if (!ctx) ctx = new AudioContext();
-    if (ctx.state === 'suspended') void ctx.resume();
-  };
-  window.addEventListener('pointerdown', unlock, { once: true, capture: true });
-  window.addEventListener('keydown', unlock, { once: true, capture: true });
+    if (ctx.state === 'running') return stop();
+    void ctx.resume().then(() => {
+      if (ctx?.state === 'running') stop();
+    });
+  }
+  events.forEach((e) => window.addEventListener(e, unlock, { capture: true, passive: true }));
   return enabled;
 }
 
