@@ -2,7 +2,7 @@ export const person = {
   name: 'Tanvir Ahmed Aadeef',
   role: 'Detection & AI security engineer',
   place: 'Melbourne',
-  email: 't.ahmedaadeef@gmail.com',
+  email: 'tanvir@tanvirahmedaadeef.com',
   linkedin: 'https://www.linkedin.com/in/tanvir-ahmed-aadeef/',
   github: 'https://github.com/SyntheticSovereign',
   scholar: 'https://scholar.google.com/citations?user=YSsWnuUAAAAJ',
