@@ -1,0 +1,32 @@
+---
+interface Props {
+  name: 'arrow' | 'download' | 'sound-on' | 'sound-off' | 'menu' | 'close' | 'external' | 'pause' | 'play' | 'back' | 'mail';
+  class?: string;
+}
+const { name, class: cls } = Astro.props;
+const paths: Record<Props['name'], string> = {
+  arrow: '<path d="M5 12h14M13 6l6 6-6 6"/>',
+  download: '<path d="M12 4v11M7 10l5 5 5-5M5 20h14"/>',
+  'sound-on': '<path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4.2 4.2 0 0 1 0 6M18 6.5a7.7 7.7 0 0 1 0 11"/>',
+  'sound-off': '<path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M16 9.5l5 5M21 9.5l-5 5"/>',
+  menu: '<path d="M4 7h16M4 12h16M4 17h16"/>',
+  close: '<path d="M6 6l12 12M18 6 6 18"/>',
+  external: '<path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>',
+  pause: '<path d="M8.5 5v14M15.5 5v14"/>',
+  play: '<path d="M7 5l12 7-12 7z"/>',
+  back: '<path d="M19 12H5M11 6l-6 6 6 6"/>',
+  mail: '<path d="M3.5 6.5h17v11h-17z"/><path d="M4 7l8 6 8-6"/>',
+};
+---
+
+<svg
+  class={cls}
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.6"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+  set:html={paths[name]}
+/>

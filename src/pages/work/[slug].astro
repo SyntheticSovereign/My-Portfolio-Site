@@ -1,0 +1,350 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import TrinityMap from '../../components/TrinityMap.astro';
+import Viewer from '../../components/Viewer.astro';
+import Scorecard from '../../components/Scorecard.astro';
+import { cases, type CaseFile } from '../../data/site';
+
+export function getStaticPaths() {
+  return cases.map((c, i) => ({ params: { slug: c.slug }, props: { c, next: cases[(i + 1) % cases.length] } }));
+}
+
+interface Props {
+  c: CaseFile;
+  next: CaseFile;
+}
+const { c, next } = Astro.props;
+
+const shots = import.meta.glob<{ default: ImageMetadata }>('../../assets/{soc,aemo,trinity}/*.{png,jpg}', { eager: true });
+const img = (name: string) => Object.entries(shots).find(([k]) => /\/([^/]+)\.(png|jpg)$/.exec(k)?.[1] === name)?.[1].default;
+---
+
+<Base title={`${c.title} · Project · Tanvir Ahmed Aadeef`} description={c.short}>
+  <article class="case-page">
+    <header class="wrap head">
+      <a class="back link" href="/#projects"><Icon name="back" /> All projects</a>
+      <h1>{c.title}</h1>
+      <p class="short">{c.short}</p>
+      <dl class="meta">
+        <div><dt class="mono">Project</dt><dd class="mono">{c.id}</dd></div>
+        <div><dt class="mono">Status</dt><dd>{c.status}</dd></div>
+        <div><dt class="mono">Period</dt><dd>{c.period}</dd></div>
+        <div><dt class="mono">Role</dt><dd>{c.role}</dd></div>
+      </dl>
+    </header>
+
+    {c.slug === 'trinity' && (
+      <div class="wrap">
+        <div class="figure map">
+          <TrinityMap />
+        </div>
+      </div>
+    )}
+
+    {c.images && (
+      <div class="wrap">
+        <a class="figure shot shot-link" href={img(c.images[0].src)!.src} target="_blank" rel="noopener">
+          <Image src={img(c.images[0].src)!} alt={c.images[0].alt} widths={[800, 1280, 1920]} sizes="(max-width: 1320px) 100vw, 1320px" loading="eager" />
+          <span class="visually-hidden">Open full size</span>
+        </a>
+      </div>
+    )}
+
+    <div class="wrap body">
+      <div class="summary">
+        <h2>Summary</h2>
+        <p>{c.summary}</p>
+      </div>
+
+      {c.sections.map((s) => (
+        <section class="block">
+          <h2>{s.heading}</h2>
+          <div class="block-body">
+            <ul>
+              {s.points.map((p) => <li>{p}</li>)}
+            </ul>
+            {s.scorecard && <Scorecard />}
+            {s.images && (
+              <div class="shots">
+                {s.images.map((im) => (
+                  <a class="figure shot-link" href={img(im.src)!.src} target="_blank" rel="noopener">
+                    <Image src={img(im.src)!} alt={im.alt} widths={[480, 800, 1280]} sizes="(max-width: 860px) 100vw, 45vw" />
+                    <span class="visually-hidden">Open full size</span>
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+      ))}
+
+      {c.images && c.images.length > 1 && (
+        <div class="gallery">
+          {c.images.slice(1).map((im) => (
+            <a class="figure shot small shot-link" href={img(im.src)!.src} target="_blank" rel="noopener">
+              <Image src={img(im.src)!} alt={im.alt} widths={[640, 960, 1400]} sizes="(max-width: 860px) 100vw, 50vw" />
+              <span class="visually-hidden">Open full size</span>
+            </a>
+          ))}
+        </div>
+      )}
+
+      <section class="block outcome">
+        <h2>Outcome</h2>
+        <div class="block-body">
+          <p>{c.outcome}</p>
+          {c.outcomePoints && (
+            <ul>
+              {c.outcomePoints.map((p) => <li>{p}</li>)}
+            </ul>
+          )}
+        </div>
+      </section>
+
+      <section class="block">
+        <h2>Stack</h2>
+        <ul class="tags">
+          {c.stack.map((s) => <li class="tag">{s}</li>)}
+        </ul>
+      </section>
+
+      {c.link && (
+        <p class="ext">
+          <a class="btn btn-line" href={c.link.href} target="_blank" rel="noopener noreferrer">{c.link.label} <Icon name="external" /></a>
+        </p>
+      )}
+    </div>
+
+    <nav class="wrap next" aria-label="Next project">
+      <a href={`/work/${next.slug}/`}>
+        <span class="next-title">{next.title} <Icon name="arrow" class="arrow" /></span>
+        <span class="mono">Next project</span>
+      </a>
+    </nav>
+  </article>
+  <Viewer />
+</Base>
+
+<style>
+  .case-page {
+    padding-top: calc(var(--nav-h) + clamp(32px, 7vh, 72px));
+  }
+  .head {
+    display: grid;
+    gap: 16px;
+    padding-bottom: clamp(32px, 5vh, 56px);
+  }
+  .back {
+    justify-self: start;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    color: var(--ink-2);
+    font-size: 0.92rem;
+  }
+  .back :global(svg) {
+    width: 16px;
+    height: 16px;
+  }
+  h1 {
+    font-size: var(--step-4);
+    letter-spacing: -0.04em;
+  }
+  .short {
+    max-width: 50ch;
+    color: var(--ink-2);
+    font-size: var(--step-2);
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 40px;
+    margin: 12px 0 0;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+  }
+  .meta dt {
+    color: var(--muted);
+    font-size: 0.78rem;
+  }
+  .meta dd {
+    margin: 2px 0 0;
+  }
+  .figure {
+    position: relative;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: var(--bg-raised);
+    overflow: hidden;
+  }
+  .map {
+    aspect-ratio: 594 / 430;
+    max-height: 70vh;
+  }
+  .shot :global(img) {
+    width: 100%;
+    height: auto;
+  }
+  .body {
+    display: grid;
+    gap: clamp(40px, 6vh, 64px);
+    padding-block: clamp(48px, 8vh, 96px);
+  }
+  .summary,
+  .block {
+    display: grid;
+    grid-template-columns: 16rem minmax(0, 1fr);
+    gap: 24px 48px;
+  }
+  .summary h2,
+  .block h2 {
+    font-size: var(--step-1);
+    letter-spacing: -0.015em;
+  }
+  .summary p {
+    max-width: 62ch;
+    font-size: var(--step-1);
+    line-height: 1.55;
+  }
+  .block-body {
+    display: grid;
+    gap: 28px;
+    min-width: 0;
+  }
+  .shots {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .shots > *,
+  .gallery > * {
+    aspect-ratio: 16 / 10;
+  }
+  .shots > :first-child:nth-last-child(odd),
+  .gallery > :first-child:nth-last-child(odd) {
+    grid-column: 1 / -1;
+    aspect-ratio: 21 / 9;
+  }
+  .shots :global(img),
+  .gallery :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: left top;
+  }
+  .shot-link {
+    cursor: zoom-in;
+  }
+  .shot-link {
+    display: block;
+  }
+  .shot-link :global(img) {
+    display: block;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .shot-link {
+      transition: border-color 200ms ease;
+    }
+    .shot-link:hover {
+      border-color: var(--line-hi);
+    }
+  }
+  .block ul:not(.tags) {
+    display: grid;
+    gap: 14px;
+    max-width: 68ch;
+  }
+  .block li:not(.tag) {
+    position: relative;
+    padding-left: 22px;
+    color: var(--ink-2);
+  }
+  .block li:not(.tag)::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.72em;
+    width: 8px;
+    height: 1px;
+    background: var(--resolved);
+  }
+  .outcome p {
+    max-width: 62ch;
+    color: var(--ink);
+  }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+    align-items: start;
+  }
+  .ext {
+    margin-left: calc(16rem + 48px);
+  }
+  .next {
+    padding-bottom: clamp(64px, 10vh, 120px);
+  }
+  .next a {
+    display: grid;
+    gap: 8px;
+    padding: 32px 0;
+    border-top: 1px solid var(--line);
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .next .mono {
+    color: var(--muted);
+    font-size: 0.84rem;
+  }
+  .next-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    font-size: var(--step-3);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+  }
+  .next-title :global(svg) {
+    width: 0.7em;
+    height: 0.7em;
+    transition: transform 200ms var(--ease-out);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .next a:hover .next-title :global(svg) {
+      transform: translateX(6px);
+    }
+  }
+  @media (max-width: 860px) {
+    .summary,
+    .block {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 14px;
+    }
+    .gallery,
+    .shots {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .shots > :first-child:nth-last-child(odd),
+    .gallery > :first-child:nth-last-child(odd) {
+      aspect-ratio: 16 / 10;
+    }
+    .ext {
+      margin-left: 0;
+    }
+    .map {
+      aspect-ratio: auto;
+      height: 300px;
+    }
+  }
+</style>

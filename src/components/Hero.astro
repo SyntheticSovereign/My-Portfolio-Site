@@ -1,0 +1,589 @@
+---
+import { person, counters, alerts } from '../data/site';
+import Icon from './Icon.astro';
+
+const bootLines = [
+  ['ok', 'Elastic Security connected'],
+  ['ok', 'Splunk Enterprise Security connected'],
+  ['ok', 'Microsoft Sentinel connected'],
+  ['ok', 'AegisForge (Wazuh) connected'],
+  ['ok', '150+ detection rules loaded'],
+  ['ok', 'OpenAEV scenarios armed'],
+];
+---
+
+<section class="hero" id="top" aria-labelledby="hero-title" data-hero>
+  <div class="boot" data-boot aria-hidden="true">
+    <div class="boot-inner mono">
+      <p class="boot-title">Starting SOC console</p>
+      <ol>
+        {bootLines.map(([s, l]) => <li><span class="boot-ok">[{s}]</span> {l}</li>)}
+      </ol>
+    </div>
+    <button class="boot-skip mono" type="button" data-boot-skip tabindex="-1">Skip</button>
+  </div>
+
+  <canvas class="hero-canvas" data-scene aria-hidden="true"></canvas>
+  <div class="hero-shade" aria-hidden="true"></div>
+  <div class="host-tag mono" data-host-tag aria-hidden="true" hidden></div>
+
+  <div class="hero-grid wrap">
+    <div class="hero-main" data-enter>
+      <h1 id="hero-title">
+        <span class="hero-name">{person.name}</span>
+        <span class="hero-role">{person.role}</span>
+      </h1>
+      <p class="hero-line">I prove the detections work.</p>
+      <p class="hero-lede">{person.lede}</p>
+      <div class="hero-actions">
+        <a class="btn btn-solid" href="#projects">View my projects <Icon name="arrow" class="arrow" /></a>
+        <a class="btn btn-line" href={person.resume} download><Icon name="download" /> Download résumé</a>
+      </div>
+    </div>
+
+    <aside class="feed" aria-labelledby="feed-title" data-enter data-feed>
+      <div class="feed-head">
+        <h2 id="feed-title" class="feed-title">
+          <span class="dot dot-attack feed-live" aria-hidden="true"></span> Live detections
+        </h2>
+        <button class="feed-pause" type="button" data-feed-pause aria-pressed="false" aria-label="Pause the live feed">
+          <Icon name="pause" class="i-pause" /><Icon name="play" class="i-play" />
+        </button>
+      </div>
+
+      <div class="feed-view" data-feed-list-view>
+        <ul class="feed-list" data-feed-list aria-live="polite" aria-relevant="additions"></ul>
+        <p class="feed-hint">Select an alert to trace it to the host and see the project behind it.</p>
+      </div>
+
+      <div class="feed-detail" data-feed-detail hidden>
+        <button class="feed-back" type="button" data-feed-back><Icon name="back" /> Back to live feed</button>
+        <p class="detail-tech mono" data-d-tech></p>
+        <h3 class="detail-title" data-d-title></h3>
+        <dl class="detail-meta">
+          <div><dt>Source</dt><dd data-d-source></dd></div>
+          <div><dt>Host</dt><dd class="mono" data-d-host></dd></div>
+          <div><dt>Severity</dt><dd data-d-sev></dd></div>
+          <div><dt>Verdict</dt><dd data-d-verdict></dd></div>
+        </dl>
+        <p class="detail-text" data-d-text></p>
+        <a class="btn btn-solid detail-open" data-d-link href="#">View the project <Icon name="arrow" class="arrow" /></a>
+      </div>
+    </aside>
+
+    <ul class="counters" data-enter aria-label="Work in numbers">
+      {counters.map((c) => (
+        <li>
+          <span class="counter-value mono">{c.value}</span>
+          <span class="counter-label">{c.label}</span>
+        </li>
+      ))}
+    </ul>
+  </div>
+
+  <script type="application/json" id="alerts-data" set:html={JSON.stringify(alerts)} />
+</section>
+
+<script>
+  import { initHero } from '../scripts/hero';
+  initHero();
+</script>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: max(100svh, 680px);
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .hero-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    opacity: calc(1 - var(--handoff, 0));
+    transform: scale(calc(1 + var(--handoff, 0) * 0.12));
+    transform-origin: 70% 50%;
+  }
+  .hero[data-no-gl] .hero-canvas {
+    background:
+      radial-gradient(circle at 70% 45%, rgb(77 163 255 / 0.12), transparent 40%),
+      linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 48px 48px,
+      linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0 / 48px 48px;
+  }
+  .hero-shade {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      linear-gradient(90deg, rgb(var(--bg-rgb) / 0.92) 0%, rgb(var(--bg-rgb) / 0.6) 34%, rgb(var(--bg-rgb) / 0) 58%),
+      linear-gradient(0deg, rgb(var(--bg-rgb) / 0.95) 0%, rgb(var(--bg-rgb) / 0) 30%);
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(17.5rem, 21.25rem);
+    grid-template-rows: 1fr auto;
+    gap: 40px 48px;
+    min-height: max(100svh, 680px);
+    padding-top: calc(var(--nav-h) + clamp(32px, 7vh, 72px));
+    padding-bottom: 32px;
+  }
+  .hero-main {
+    align-self: center;
+    max-width: 40rem;
+  }
+  .hero h1 {
+    display: grid;
+    gap: 14px;
+  }
+  .hero-name {
+    font-size: var(--step-4);
+    font-weight: 640;
+    letter-spacing: -0.04em;
+    line-height: 0.98;
+  }
+  .hero-role {
+    color: var(--ink-2);
+    font-size: var(--step-2);
+    font-weight: 480;
+    letter-spacing: -0.02em;
+  }
+  .hero-line {
+    margin-top: 28px;
+    color: var(--resolved);
+    font-size: var(--step-1);
+    font-weight: 560;
+  }
+  .hero-lede {
+    margin-top: 10px;
+    max-width: 52ch;
+    color: var(--ink-2);
+    font-size: var(--step-0);
+  }
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 32px;
+  }
+
+  .feed {
+    align-self: center;
+    display: flex;
+    flex-direction: column;
+    min-height: 23.75rem;
+    max-height: 29.375rem;
+    border: 1px solid var(--line-hi);
+    border-radius: var(--radius-lg);
+    background: rgb(var(--raised-rgb) / 0.6);
+    backdrop-filter: blur(3px);
+    box-shadow: 0 24px 60px -20px rgb(0 0 0 / 0.6);
+  }
+  .feed-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 6px 6px 16px;
+    border-bottom: 1px solid var(--line);
+  }
+  .feed-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.92rem;
+    font-weight: 600;
+    letter-spacing: 0;
+  }
+  .feed-live {
+    animation: live 2s ease-in-out infinite;
+  }
+  .feed[data-paused] .feed-live {
+    animation: none;
+    background: var(--muted);
+  }
+  @keyframes live {
+    50% {
+      opacity: 0.35;
+    }
+  }
+  .feed-pause {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border: 0;
+    border-radius: var(--radius);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition: color 160ms ease, background-color 160ms ease;
+  }
+  .feed-pause:hover {
+    color: var(--ink);
+    background: var(--panel-hi);
+  }
+  .feed-pause :global(svg) {
+    width: 16px;
+    height: 16px;
+  }
+  .feed-pause :global(.i-play),
+  .feed-pause[aria-pressed='true'] :global(.i-pause) {
+    display: none;
+  }
+  .feed-pause[aria-pressed='true'] :global(.i-play) {
+    display: block;
+  }
+  .feed-view[hidden] {
+    display: none;
+  }
+  .feed-view {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+  }
+  .feed-list {
+    flex: 1;
+    overflow: hidden;
+    padding: 6px;
+    mask-image: linear-gradient(180deg, #000 78%, transparent);
+  }
+  .feed-hint {
+    padding: 12px 16px 14px;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 0.82rem;
+  }
+  :global(.alert) {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: start;
+    gap: 4px 12px;
+    width: 100%;
+    padding: 11px 10px;
+    border: 0;
+    border-radius: var(--radius);
+    background: transparent;
+    color: var(--ink);
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 160ms ease;
+  }
+  :global(.alert:hover) {
+    background: var(--panel-hi);
+  }
+  :global(.alert .dot) {
+    margin-top: 7px;
+    transition: background-color 300ms ease;
+  }
+  :global(.alert-title) {
+    font-size: 0.9rem;
+    font-weight: 520;
+    line-height: 1.35;
+  }
+  :global(.alert-meta) {
+    grid-column: 2 / -1;
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: var(--muted);
+    font-size: 0.76rem;
+  }
+  :global(.alert-state) {
+    font-size: 0.72rem;
+    padding: 2px 7px;
+    border-radius: 2px;
+    white-space: nowrap;
+    transition: color 300ms ease, background-color 300ms ease;
+  }
+  :global(.alert[data-state='attack'] .alert-state) {
+    color: var(--attack-ink);
+    background: rgb(255 91 79 / 0.12);
+  }
+  :global(.alert[data-state='detected'] .alert-state),
+  :global(.alert[data-state='blocked'] .alert-state) {
+    color: var(--detect-ink);
+    background: rgb(77 163 255 / 0.12);
+  }
+  :global(.alert[data-state='validated'] .alert-state) {
+    color: var(--resolved);
+    background: rgb(62 214 142 / 0.12);
+  }
+  :global(.feed-list > li) {
+    animation: row-in 420ms var(--ease-out) both;
+  }
+  @keyframes row-in {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+  }
+
+  .feed-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 14px 18px 18px;
+    animation: row-in 280ms var(--ease-out) both;
+  }
+  .feed-detail[hidden] {
+    display: none;
+  }
+  .feed-back {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 0 10px 0 6px;
+    margin-left: -6px;
+    border: 0;
+    border-radius: var(--radius);
+    background: transparent;
+    color: var(--ink-2);
+    font-size: 0.86rem;
+    cursor: pointer;
+  }
+  .feed-back:hover {
+    color: var(--ink);
+    background: var(--panel-hi);
+  }
+  .feed-back :global(svg) {
+    width: 16px;
+    height: 16px;
+  }
+  .detail-tech {
+    color: var(--attack-ink);
+    font-size: 0.82rem;
+  }
+  .detail-title {
+    font-size: 1.25rem;
+    letter-spacing: -0.015em;
+  }
+  .detail-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 16px;
+    margin: 0;
+    padding: 12px 0;
+    border-block: 1px solid var(--line);
+  }
+  .detail-meta dt {
+    color: var(--muted);
+    font-size: 0.74rem;
+  }
+  .detail-meta dd {
+    margin: 2px 0 0;
+    font-size: 0.86rem;
+  }
+  .detail-text {
+    color: var(--ink-2);
+    font-size: 0.9rem;
+  }
+  .detail-open {
+    margin-top: auto;
+  }
+
+  .host-tag {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 1;
+    padding: 4px 8px;
+    border: 1px solid var(--detect);
+    border-radius: 2px;
+    background: rgb(var(--bg-rgb) / 0.85);
+    color: var(--detect-ink);
+    font-size: 0.75rem;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  .counters {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: rgb(var(--raised-rgb) / 0.7);
+    backdrop-filter: blur(6px);
+  }
+  .counters li {
+    display: grid;
+    gap: 4px;
+    padding: 16px 20px;
+  }
+  .counters li + li {
+    border-left: 1px solid var(--line);
+  }
+  .counter-value {
+    font-size: var(--step-2);
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .counter-label {
+    color: var(--muted);
+    font-size: 0.84rem;
+    line-height: 1.35;
+  }
+
+  .boot {
+    position: fixed;
+    inset: 0;
+    z-index: 80;
+    display: grid;
+    place-items: center;
+    background: var(--bg);
+    animation: boot-out 300ms var(--ease-out) 1.4s forwards;
+  }
+  .boot[data-done] {
+    animation: boot-out 280ms var(--ease-out) forwards;
+  }
+  @keyframes boot-out {
+    to {
+      opacity: 0;
+      visibility: hidden;
+    }
+  }
+  .boot-inner {
+    width: min(440px, 86vw);
+    font-size: 0.86rem;
+    color: var(--ink-2);
+  }
+  .boot-title {
+    margin-bottom: 16px;
+    color: var(--ink);
+  }
+  .boot li {
+    opacity: 0;
+    animation: boot-line 1ms linear forwards;
+    padding-block: 2px;
+  }
+  .boot li:nth-child(1) { animation-delay: 140ms; }
+  .boot li:nth-child(2) { animation-delay: 300ms; }
+  .boot li:nth-child(3) { animation-delay: 460ms; }
+  .boot li:nth-child(4) { animation-delay: 620ms; }
+  .boot li:nth-child(5) { animation-delay: 820ms; }
+  .boot li:nth-child(6) { animation-delay: 1000ms; }
+  @keyframes boot-line {
+    to {
+      opacity: 1;
+    }
+  }
+  .boot-ok {
+    color: var(--resolved);
+  }
+  .boot-skip {
+    position: absolute;
+    right: var(--gutter);
+    bottom: 24px;
+    min-height: 44px;
+    padding: 0 14px;
+    border: 1px solid var(--line-hi);
+    border-radius: var(--radius);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+  }
+  :global(html[data-booted]) .boot {
+    display: none;
+  }
+
+  :global(html.js) [data-enter] {
+    animation: enter 700ms var(--ease-out) 1.5s both;
+  }
+  :global(html.js) .feed[data-enter] {
+    animation-delay: 1.59s;
+  }
+  :global(html.js) .counters[data-enter] {
+    animation-delay: 1.68s;
+  }
+  :global(html.js[data-booted]) [data-enter],
+  :global(html.js[data-entered]) [data-enter] {
+    animation-delay: 0s;
+  }
+  :global(html.js[data-booted]) .feed[data-enter],
+  :global(html.js[data-entered]) .feed[data-enter] {
+    animation-delay: 90ms;
+  }
+  :global(html.js[data-booted]) .counters[data-enter],
+  :global(html.js[data-entered]) .counters[data-enter] {
+    animation-delay: 180ms;
+  }
+  @keyframes enter {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .boot {
+      display: none;
+    }
+    :global(html.js) [data-enter] {
+      animation: none;
+    }
+  }
+
+  @media (max-width: 1100px) {
+    .counters {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .counters li:nth-child(3) {
+      border-left: 0;
+    }
+    .counters li:nth-child(n + 3) {
+      border-top: 1px solid var(--line);
+    }
+  }
+  @media (max-width: 900px) {
+    .hero-grid {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: auto;
+      padding-top: calc(var(--nav-h) + min(62vw, 360px));
+      gap: 32px;
+    }
+    .hero-shade {
+      background: linear-gradient(0deg, rgb(var(--bg-rgb) / 1) 52%, rgb(var(--bg-rgb) / 0.35) 72%, rgb(var(--bg-rgb) / 0) 88%);
+    }
+    .feed {
+      min-height: 0;
+      max-height: none;
+    }
+    .feed-list {
+      max-height: 300px;
+    }
+  }
+  @media (max-width: 900px) {
+    .host-tag {
+      display: none;
+    }
+  }
+  @media (max-width: 520px) {
+    .hero-actions .btn {
+      width: 100%;
+    }
+    .counters li {
+      padding: 14px;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .boot {
+      display: none;
+    }
+    :global(html.js) [data-enter] {
+      opacity: 1;
+      transform: none;
+    }
+    .feed-live {
+      animation: none;
+    }
+    :global(.feed-list > li),
+    .feed-detail {
+      animation: none;
+    }
+  }
+</style>

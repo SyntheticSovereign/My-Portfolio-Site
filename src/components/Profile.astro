@@ -1,0 +1,128 @@
+---
+import { Image } from 'astro:assets';
+import { profile, person } from '../data/site';
+import portrait from '../assets/portrait.jpg';
+---
+
+<section class="section" id="about" data-ambient="globe" aria-labelledby="profile-title">
+  <div class="wrap profile">
+    <div class="profile-text">
+      <h2 id="profile-title" class="eyebrow mono">About me</h2>
+      <p class="statement">
+        I think like an <span class="hl-attack">attacker</span>, so an <span class="hl-detect">alert</span> fires before they are <span class="hl-resolved">done</span>.
+      </p>
+      <div class="body">
+        {profile.paragraphs.map((p) => <p>{p}</p>)}
+      </div>
+      <div class="offclock">
+        <p class="offclock-label mono">Off the clock</p>
+        <p>{profile.offClock}</p>
+      </div>
+    </div>
+    <figure class="portrait-wrap">
+      <Image class="portrait" src={portrait} alt={person.name} widths={[480]} sizes="(max-width: 860px) 100vw, 420px" />
+    </figure>
+  </div>
+</section>
+
+<style>
+  .profile {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    gap: clamp(40px, 7vw, 120px);
+    align-items: center;
+  }
+  .profile-text {
+    display: grid;
+    gap: 28px;
+  }
+  .eyebrow {
+    color: var(--resolved);
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .statement {
+    max-width: 18ch;
+    color: var(--ink);
+    font-size: clamp(2.2rem, 1.5rem + 3vw, 4.4rem);
+    font-weight: 650;
+    line-height: 1.04;
+    letter-spacing: -0.035em;
+    text-wrap: balance;
+  }
+  .hl-attack {
+    color: var(--attack);
+  }
+  .hl-detect {
+    color: var(--detect);
+  }
+  .hl-resolved {
+    color: var(--resolved);
+  }
+  .body {
+    display: grid;
+    gap: 18px;
+    max-width: 60ch;
+  }
+  .body p {
+    color: var(--ink-2);
+    font-size: var(--step-1);
+    line-height: 1.6;
+  }
+  .body p:first-child {
+    color: var(--ink);
+  }
+  .offclock {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 20px;
+    align-items: baseline;
+    max-width: 60ch;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+  }
+  .offclock-label {
+    color: var(--muted);
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .offclock p:last-child {
+    color: var(--ink-2);
+    line-height: 1.6;
+  }
+  .portrait-wrap {
+    position: relative;
+    margin: 0;
+    justify-self: end;
+    width: 100%;
+    max-width: 26.25rem;
+  }
+  .portrait {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--line-hi);
+  }
+  @media (max-width: 860px) {
+    .profile {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .portrait-wrap {
+      justify-self: start;
+      max-width: 360px;
+    }
+  }
+  @media (max-width: 480px) {
+    .offclock {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 6px;
+    }
+  }
+</style>

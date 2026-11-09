@@ -1,0 +1,148 @@
+---
+import { publications, person } from '../data/site';
+import Icon from './Icon.astro';
+---
+
+<section class="section" id="publications" data-ambient="lattice" aria-labelledby="pubs-title">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 id="pubs-title">Publications</h2>
+      <p>Peer-reviewed research from my time at Independent University, Bangladesh, on using blockchain to make trust verifiable.</p>
+    </div>
+    <ol class="pubs">
+      {publications.map((p) => (
+        <li class="pub">
+          <div class="pub-meta mono">
+            <span>{p.when}</span>
+            <span class="pub-venue">{p.venueShort}</span>
+          </div>
+          <div class="pub-body">
+            <h3>
+              <a class="pub-title" href={`https://doi.org/${p.doi}`} target="_blank" rel="noopener noreferrer">{p.title}</a>
+            </h3>
+            <p class="pub-authors">
+              {p.authors.map((a, i) => (
+                <>
+                  {i > 0 && ', '}
+                  {a === person.name ? <strong>{a}</strong> : a}
+                </>
+              ))}
+            </p>
+            <p class="pub-venue-full">{p.venue} · {p.place}</p>
+            <p class="pub-text">{p.text}</p>
+            <ul class="pub-links">
+              <li><a class="link" href={`https://doi.org/${p.doi}`} target="_blank" rel="noopener noreferrer">IEEE Xplore <Icon name="arrow" class="arrow" /></a></li>
+              {p.pdf && <li><a class="link" href={p.pdf} target="_blank" rel="noopener noreferrer">Free PDF <Icon name="arrow" class="arrow" /></a></li>}
+              <li class="mono pub-doi">DOI {p.doi}</li>
+            </ul>
+          </div>
+        </li>
+      ))}
+    </ol>
+    <p class="pubs-more">
+      <a class="link" href={person.scholar} target="_blank" rel="noopener noreferrer">Google Scholar profile <Icon name="arrow" class="arrow" /></a>
+    </p>
+  </div>
+</section>
+
+<style>
+  .pubs {
+    border-top: 1px solid var(--line);
+  }
+  .pub {
+    display: grid;
+    grid-template-columns: 11rem minmax(0, 1fr);
+    gap: 24px;
+    padding-block: 32px;
+    border-bottom: 1px solid var(--line);
+  }
+  .pub-meta {
+    display: grid;
+    gap: 6px;
+    align-content: start;
+    padding-top: 4px;
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+  .pub-venue {
+    color: var(--detect);
+  }
+  .pub-body {
+    display: grid;
+    gap: 8px;
+    max-width: 72ch;
+  }
+  .pub h3 {
+    font-size: var(--step-1);
+    line-height: 1.35;
+    letter-spacing: -0.012em;
+  }
+  .pub-title {
+    color: var(--ink);
+    text-decoration: none;
+    transition: color 160ms ease;
+  }
+  .pub-authors {
+    color: var(--ink-2);
+    font-size: 0.92rem;
+  }
+  .pub-authors strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .pub-venue-full {
+    color: var(--muted);
+    font-size: 0.88rem;
+  }
+  .pub-text {
+    margin-top: 6px;
+    color: var(--ink-2);
+    line-height: 1.6;
+  }
+  .pub-links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 22px;
+    margin-top: 8px;
+    font-size: 0.92rem;
+  }
+  .pub-links a,
+  .pubs-more a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .pub-links :global(.arrow),
+  .pubs-more :global(.arrow) {
+    width: 14px;
+    height: 14px;
+    transition: transform 160ms var(--ease-out);
+  }
+  .pub-doi {
+    color: var(--muted);
+    font-size: 0.76rem;
+  }
+  .pubs-more {
+    margin-top: 28px;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .pub-title:hover {
+      color: var(--detect);
+    }
+    .pub-links a:hover :global(.arrow),
+    .pubs-more a:hover :global(.arrow) {
+      transform: translateX(3px);
+    }
+  }
+  @media (max-width: 720px) {
+    .pub {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 10px;
+    }
+    .pub-meta {
+      display: flex;
+      gap: 12px;
+    }
+  }
+</style>

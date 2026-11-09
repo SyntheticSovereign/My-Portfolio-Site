@@ -1,0 +1,124 @@
+---
+import { Image } from 'astro:assets';
+import { experience } from '../data/site';
+import triskele from '../assets/orgs/triskele.png';
+import latrobe from '../assets/orgs/latrobe.png';
+
+const logos = { triskele, latrobe };
+---
+
+<section class="section" id="experience" data-ambient="globe" aria-labelledby="experience-title">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 id="experience-title">Experience</h2>
+      <p>Where I have done this work for someone else.</p>
+    </div>
+    <ol class="jobs">
+      {experience.map((j) => (
+        <li class="job">
+          <div class="job-head">
+            <Image class="job-logo" src={logos[j.logo]} alt="" width={56} height={56} />
+            <div>
+              <h3>{j.role}</h3>
+              <p class="job-org">{j.org} · {j.place}</p>
+              <p class="job-when mono">{j.when}</p>
+            </div>
+          </div>
+          {j.note && <p class="job-note">{j.note}</p>}
+          <ul class="job-points">
+            {j.points.map((p) => <li>{p}</li>)}
+          </ul>
+          <ul class="tags" aria-label="Tools">
+            {j.tools.map((t) => <li class="tag">{t}</li>)}
+          </ul>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .jobs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+  }
+  .job {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: clamp(22px, 3vw, 34px);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: var(--bg-raised);
+  }
+  .job-head {
+    display: grid;
+    grid-template-columns: 56px minmax(0, 1fr);
+    align-items: start;
+    gap: 16px;
+  }
+  .job-logo {
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+    background: #fff;
+  }
+  .job h3 {
+    font-size: var(--step-2);
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+  .job-org {
+    margin-top: 4px;
+    color: var(--ink-2);
+  }
+  .job-when {
+    margin-top: 6px;
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+  .job-note {
+    color: var(--resolved);
+    font-size: 0.92rem;
+  }
+  .job-points {
+    display: grid;
+    gap: 10px;
+  }
+  .job-points li {
+    position: relative;
+    padding-left: 18px;
+    color: var(--ink-2);
+    line-height: 1.55;
+  }
+  .job-points li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.7em;
+    width: 8px;
+    height: 1px;
+    background: var(--muted);
+  }
+  .job .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: auto;
+  }
+  @media (max-width: 960px) {
+    .jobs {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+  @media (max-width: 520px) {
+    .job-head {
+      grid-template-columns: 48px minmax(0, 1fr);
+    }
+    .job-logo {
+      width: 48px;
+      height: 48px;
+    }
+  }
+</style>

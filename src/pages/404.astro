@@ -1,0 +1,76 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+---
+
+<Base title="Page not found · Tanvir Ahmed Aadeef" description="This page does not exist.">
+  <section class="nf wrap" aria-labelledby="nf-title">
+    <div class="alert-card">
+      <h1 id="nf-title">Unauthorised access detected</h1>
+      <p class="lede">Page not found. Nothing lives at this address, so the request was logged and the incident closed.</p>
+      <dl class="meta mono">
+        <div><dt>Incident</dt><dd><span class="dot dot-attack" aria-hidden="true"></span> 404 · Severity low</dd></div>
+        <div><dt>Technique</dt><dd>T1083 · File and directory discovery</dd></div>
+        <div><dt>Verdict</dt><dd>Benign: probably a mistyped link</dd></div>
+      </dl>
+      <div class="actions">
+        <a class="btn btn-solid" href="/"><Icon name="back" /> Back to the console</a>
+        <a class="btn btn-line" href="/#projects">View my projects</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .nf {
+    display: grid;
+    place-items: center;
+    min-height: 100svh;
+    padding-block: calc(var(--nav-h) + 40px) 60px;
+  }
+  .alert-card {
+    width: min(640px, 100%);
+    padding: clamp(28px, 5vw, 48px);
+    border: 1px solid var(--line-hi);
+    border-radius: var(--radius-lg);
+    background: var(--bg-raised);
+  }
+  h1 {
+    font-size: var(--step-3);
+    letter-spacing: -0.04em;
+  }
+  .lede {
+    margin-top: 16px;
+    color: var(--ink-2);
+    font-size: var(--step-1);
+    line-height: 1.5;
+  }
+  .meta {
+    display: grid;
+    gap: 10px;
+    margin: 28px 0 0;
+    padding: 18px 0;
+    border-block: 1px solid var(--line);
+    font-size: 0.85rem;
+  }
+  .meta div {
+    display: grid;
+    grid-template-columns: 7rem 1fr;
+    gap: 12px;
+  }
+  .meta dt {
+    color: var(--muted);
+  }
+  .meta dd {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 28px;
+  }
+</style>

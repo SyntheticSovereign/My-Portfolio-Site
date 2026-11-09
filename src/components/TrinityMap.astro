@@ -1,0 +1,199 @@
+---
+const nodes = [
+  { id: 'cti', x: 24, y: 16, w: 118, label: 'OpenCTI', sub: 'actor intel', tone: 'intel' },
+  { id: 'aev', x: 24, y: 104, w: 118, label: 'OpenAEV', sub: 'attack injects', tone: 'attack' },
+  { id: 'ep', x: 24, y: 192, w: 118, label: 'Windows hosts', sub: 'Sysmon · Defend', tone: 'host' },
+  { id: 'vc', x: 24, y: 280, w: 118, label: 'Collectors', sub: 'all 3 SIEMs', tone: 'resolved' },
+  { id: 'dac', x: 212, y: 16, w: 150, label: 'Detection-as-code', sub: 'Forgejo CI → rules', tone: 'code' },
+  { id: 'el', x: 212, y: 104, w: 150, label: 'Elastic Security', sub: 'SIEM', tone: 'detect' },
+  { id: 'sp', x: 212, y: 192, w: 150, label: 'Splunk ES', sub: 'SIEM', tone: 'detect' },
+  { id: 'af', x: 212, y: 280, w: 150, label: 'AegisForge', sub: 'Wazuh SIEM', tone: 'detect' },
+  { id: 'aw', x: 212, y: 368, w: 150, label: 'Aegis Ward', sub: 'guards local LLM', tone: 'detect' },
+  { id: 'ai', x: 432, y: 104, w: 138, label: 'Laya → Qwen', sub: '→ Azrael triage', tone: 'resolved' },
+  { id: 'rt', x: 432, y: 192, w: 138, label: 'Alert router', sub: 'custom', tone: 'route' },
+  { id: 'th', x: 432, y: 280, w: 138, label: 'TheHive', sub: 'cases · Grafana', tone: 'resolved' },
+];
+const H = 46;
+const mid = (id: string, side: 'l' | 'r' | 't' | 'b') => {
+  const n = nodes.find((n) => n.id === id)!;
+  if (side === 'l') return [n.x, n.y + H / 2];
+  if (side === 'r') return [n.x + n.w, n.y + H / 2];
+  if (side === 't') return [n.x + n.w / 2, n.y];
+  return [n.x + n.w / 2, n.y + H];
+};
+const curve = (a: number[], b: number[]) => {
+  const dx = (b[0] - a[0]) / 2;
+  return `M${a[0]},${a[1]} C${a[0] + dx},${a[1]} ${b[0] - dx},${b[1]} ${b[0]},${b[1]}`;
+};
+const line = (a: number[], b: number[]) => `M${a.join(',')} L${b.join(',')}`;
+const loop = (a: number[], b: number[]) => `M${a.join(',')} C${a[0] - 20},${a[1]} ${b[0] - 20},${b[1]} ${b.join(',')}`;
+const links = [
+  { d: line(mid('aev', 'b'), mid('ep', 't')), tone: 'attack', id: 'p1' },
+  { d: line(mid('cti', 'b'), mid('aev', 't')), tone: 'intel', id: 'p2' },
+  { d: curve(mid('ep', 'r'), mid('el', 'l')), tone: 'host', id: 'p3' },
+  { d: line(mid('ep', 'r'), mid('sp', 'l')), tone: 'host', id: 'p4' },
+  { d: curve(mid('ep', 'r'), [212, 296]), tone: 'host', id: 'p5' },
+  { d: curve(mid('el', 'r'), mid('rt', 'l')), tone: 'detect', id: 'p6' },
+  { d: line(mid('sp', 'r'), mid('rt', 'l')), tone: 'detect', id: 'p7' },
+  { d: curve(mid('af', 'r'), mid('rt', 'l')), tone: 'detect', id: 'p8' },
+  { d: line(mid('rt', 't'), mid('ai', 'b')), tone: 'resolved', id: 'p9' },
+  { d: line(mid('rt', 'b'), mid('th', 't')), tone: 'resolved', id: 'p10' },
+  { d: line(mid('dac', 'b'), mid('el', 't')), tone: 'code', id: 'p11' },
+  { d: line(mid('aw', 't'), mid('af', 'b')), tone: 'detect', id: 'p12' },
+  { d: line([212, 312], [142, 312]), tone: 'resolved', id: 'p13' },
+  { d: loop(mid('vc', 'l'), mid('aev', 'l')), tone: 'resolved', id: 'p14' },
+];
+const pulses = [
+  { path: 'p1', tone: 'attack', dur: 2.6, begin: 0 },
+  { path: 'p3', tone: 'host', dur: 2.4, begin: 0.6 },
+  { path: 'p4', tone: 'host', dur: 2.4, begin: 1.1 },
+  { path: 'p5', tone: 'host', dur: 2.4, begin: 1.6 },
+  { path: 'p6', tone: 'detect', dur: 2.2, begin: 1.2 },
+  { path: 'p7', tone: 'detect', dur: 2.2, begin: 1.6 },
+  { path: 'p8', tone: 'detect', dur: 2.2, begin: 2.0 },
+  { path: 'p9', tone: 'resolved', dur: 1.6, begin: 0.4 },
+  { path: 'p10', tone: 'resolved', dur: 1.6, begin: 1.4 },
+  { path: 'p2', tone: 'intel', dur: 3, begin: 0.2 },
+  { path: 'p11', tone: 'code', dur: 2, begin: 0.8 },
+  { path: 'p12', tone: 'detect', dur: 1.8, begin: 0.3 },
+  { path: 'p13', tone: 'resolved', dur: 1.6, begin: 0.9 },
+  { path: 'p14', tone: 'resolved', dur: 2.6, begin: 1.5 },
+];
+---
+
+<svg class="tmap" viewBox="0 0 594 430" role="img" aria-label="Project Trinity data flow: OpenCTI threat intelligence informs OpenAEV, which attacks Windows hosts; the hosts report to Elastic Security, Splunk ES and AegisForge, which run rules shipped from detection-as-code through Forgejo CI; Aegis Ward sends AI security events to AegisForge; an alert router sends alerts to AI triage and TheHive; validation collectors match each alert to its attack and score the result back in OpenAEV.">
+  <defs>
+    {links.map((l) => <path id={`tm-${l.id}`} d={l.d} />)}
+  </defs>
+  <g class="links">
+    {links.map((l) => <use href={`#tm-${l.id}`} class={`ln ln-${l.tone}`} data-l={l.id} />)}
+  </g>
+  <g class="pulses">
+    {pulses.map((p) => (
+      <circle r="3.2" class={`pl pl-${p.tone}`} data-l={p.path}>
+        <animateMotion dur={`${p.dur}s`} begin={`-${p.begin}s`} repeatCount="indefinite" rotate="auto">
+          <mpath href={`#tm-${p.path}`} />
+        </animateMotion>
+      </circle>
+    ))}
+  </g>
+  <g class="nodes">
+    {nodes.map((n) => (
+      <g transform={`translate(${n.x} ${n.y})`} data-n={n.id}>
+        <rect width={n.w} height={H} rx="3" class={`nd nd-${n.tone}`} />
+        <text x="12" y="20" class="nl">{n.label}</text>
+        <text x="12" y="36" class="ns">{n.sub}</text>
+      </g>
+    ))}
+  </g>
+</svg>
+
+<style>
+  .tmap {
+    --intel: #a78bfa;
+    --host: #3cc8e0;
+    --code: #f2b33d;
+    --route: #f472b6;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    padding: clamp(16px, 3vw, 36px);
+  }
+  .ln {
+    fill: none;
+    stroke-width: 1.2;
+  }
+  .ln-attack {
+    stroke: rgb(255 91 79 / 0.55);
+  }
+  .ln-detect {
+    stroke: rgb(77 163 255 / 0.35);
+  }
+  .ln-resolved {
+    stroke: rgb(62 214 142 / 0.45);
+  }
+  .ln-intel {
+    stroke: rgb(167 139 250 / 0.5);
+  }
+  .ln-host {
+    stroke: rgb(60 200 224 / 0.4);
+  }
+  .ln-code {
+    stroke: rgb(242 179 61 / 0.5);
+  }
+  .ln-muted {
+    stroke: var(--line-hi);
+    stroke-dasharray: 3 4;
+  }
+  .nd {
+    fill: var(--panel);
+    stroke: var(--line-hi);
+  }
+  .nd-attack {
+    stroke: rgb(255 91 79 / 0.6);
+  }
+  .nd-detect {
+    stroke: rgb(77 163 255 / 0.5);
+  }
+  .nd-resolved {
+    stroke: rgb(62 214 142 / 0.5);
+  }
+  .nd-intel {
+    stroke: rgb(167 139 250 / 0.6);
+  }
+  .nd-host {
+    stroke: rgb(60 200 224 / 0.55);
+  }
+  .nd-code {
+    stroke: rgb(242 179 61 / 0.55);
+  }
+  .nd-route {
+    stroke: rgb(244 114 182 / 0.55);
+  }
+  .nl {
+    fill: var(--ink);
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 560;
+  }
+  .ns {
+    fill: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+  }
+  .pl-attack {
+    fill: var(--attack);
+  }
+  .pl-detect {
+    fill: var(--detect);
+  }
+  .pl-resolved {
+    fill: var(--resolved);
+  }
+  .pl-intel {
+    fill: var(--intel);
+  }
+  .pl-host {
+    fill: var(--host);
+  }
+  .pl-code {
+    fill: var(--code);
+  }
+  .pl-muted {
+    fill: var(--muted);
+  }
+  .tmap [data-n],
+  .tmap [data-l] {
+    transition: opacity 360ms ease;
+  }
+  .tmap[data-stage] [data-n]:not(.on),
+  .tmap[data-stage] [data-l]:not(.on) {
+    opacity: 0.16;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pulses {
+      display: none;
+    }
+  }
+</style>

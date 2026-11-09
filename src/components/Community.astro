@@ -1,0 +1,79 @@
+---
+import { community } from '../data/site';
+---
+
+<section class="section" id="community" data-ambient="rings" aria-labelledby="community-title">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 id="community-title">Community</h2>
+      <p>Security is a team sport. This is where I give back, compete and keep learning outside of work.</p>
+    </div>
+    <ul class="items">
+      {community.map((c) => (
+        <li class="item">
+          <p class="item-when mono">{c.when}</p>
+          <div>
+            <h3>{c.title}</h3>
+            <p class="item-where">{c.where}</p>
+            <p class="item-text">{c.text}</p>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .items {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    border-top: 1px solid var(--line);
+    border-left: 1px solid var(--line);
+  }
+  .item {
+    display: grid;
+    grid-template-columns: 5.5rem minmax(0, 1fr);
+    gap: 16px;
+    padding: 24px;
+    background: var(--bg);
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    transition: background-color 200ms ease;
+  }
+  .item-when {
+    padding-top: 4px;
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+  .item h3 {
+    font-size: 1.08rem;
+    letter-spacing: -0.01em;
+    line-height: 1.35;
+  }
+  .item-where {
+    margin-top: 4px;
+    color: var(--resolved);
+    font-size: 0.88rem;
+  }
+  .item-text {
+    margin-top: 10px;
+    color: var(--ink-2);
+    line-height: 1.55;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .item:hover {
+      background: var(--bg-raised);
+    }
+  }
+  @media (max-width: 860px) {
+    .items {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+  @media (max-width: 480px) {
+    .item {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 6px;
+    }
+  }
+</style>

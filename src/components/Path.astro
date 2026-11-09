@@ -1,0 +1,161 @@
+---
+import { path } from '../data/site';
+---
+
+<section class="section" id="timeline" data-ambient="helix" aria-labelledby="path-title">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 id="path-title">Timeline</h2>
+      <p>Seven years of study, research and security work, most recent first.</p>
+    </div>
+
+    <div class="timeline" data-timeline>
+      <span class="rail" aria-hidden="true"><span class="rail-fill" data-rail-fill></span></span>
+      <ol class="events">
+      {[...path].reverse().map((e) => (
+        <li class="event" data-event>
+          <span class="node" aria-hidden="true"></span>
+          <p class="when mono">{e.when}</p>
+          <div class="body">
+            <h3>{e.title}</h3>
+            <p class="where">{e.where}</p>
+            <p class="text">{e.text}</p>
+          </div>
+        </li>
+      ))}
+      </ol>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  import { reducedMotion } from '../scripts/shell';
+
+  gsap.registerPlugin(ScrollTrigger);
+  const tl = document.querySelector<HTMLElement>('[data-timeline]');
+  const fill = document.querySelector<HTMLElement>('[data-rail-fill]');
+  if (tl && fill && !reducedMotion()) {
+    gsap.fromTo(
+      fill,
+      { scaleY: 0 },
+      {
+        scaleY: 1,
+        ease: 'none',
+        scrollTrigger: { trigger: tl, start: 'top 65%', end: 'bottom 65%', scrub: 0.4 },
+      },
+    );
+    tl.querySelectorAll<HTMLElement>('[data-event]').forEach((ev) => {
+      ScrollTrigger.create({
+        trigger: ev,
+        start: 'top 65%',
+        onEnter: () => ev.setAttribute('data-lit', ''),
+        onLeaveBack: () => ev.removeAttribute('data-lit'),
+      });
+    });
+  } else {
+    tl?.querySelectorAll('[data-event]').forEach((ev) => ev.setAttribute('data-lit', ''));
+    if (fill) fill.style.transform = 'scaleY(1)';
+  }
+</script>
+
+<style>
+  .timeline {
+    position: relative;
+  }
+  .rail {
+    position: absolute;
+    left: calc(10.5rem + 28px + 5px);
+    top: 10px;
+    bottom: 10px;
+    width: 1px;
+    background: var(--line-hi);
+  }
+  .rail-fill {
+    position: absolute;
+    inset: 0;
+    background: var(--resolved);
+    transform-origin: top;
+    transform: scaleY(0);
+  }
+  .event {
+    position: relative;
+    display: grid;
+    grid-template-columns: 10.5rem 11px minmax(0, 1fr);
+    gap: 0 28px;
+    padding-block: 18px;
+  }
+  .node {
+    grid-column: 2;
+    grid-row: 1;
+    width: 11px;
+    height: 11px;
+    margin-top: 7px;
+    border: 1px solid var(--line-hi);
+    border-radius: 50%;
+    background: var(--bg);
+    transition:
+      background-color 300ms ease,
+      border-color 300ms ease,
+      box-shadow 300ms ease;
+  }
+  .event[data-lit] .node {
+    background: var(--resolved);
+    border-color: var(--resolved);
+    box-shadow: 0 0 0 4px rgb(62 214 142 / 0.15);
+  }
+  .when {
+    grid-column: 1;
+    grid-row: 1;
+    color: var(--muted);
+    font-size: 0.84rem;
+    padding-top: 3px;
+    text-align: right;
+  }
+  .body {
+    grid-column: 3;
+    grid-row: 1;
+    max-width: 64ch;
+  }
+  .body h3 {
+    font-size: var(--step-1);
+    letter-spacing: -0.015em;
+  }
+  .where {
+    margin-top: 4px;
+    color: var(--ink-2);
+    font-size: 0.92rem;
+  }
+  .text {
+    margin-top: 8px;
+    color: var(--muted);
+  }
+  .event:not([data-lit]) .body h3 {
+    color: var(--ink-2);
+  }
+  .body h3 {
+    transition: color 300ms ease;
+  }
+  @media (max-width: 720px) {
+    .rail {
+      left: 5px;
+    }
+    .event {
+      grid-template-columns: 11px minmax(0, 1fr);
+      gap: 4px 20px;
+    }
+    .node {
+      grid-column: 1;
+      grid-row: 1 / span 2;
+    }
+    .when {
+      grid-column: 2;
+      text-align: left;
+    }
+    .body {
+      grid-column: 2;
+      grid-row: 2;
+    }
+  }
+</style>

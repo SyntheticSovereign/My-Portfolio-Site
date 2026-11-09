@@ -1,0 +1,200 @@
+---
+import { scenarioResults, type ScenarioStatus } from '../data/site';
+import Icon from './Icon.astro';
+
+const label: Record<ScenarioStatus, string> = {
+  validated: 'Validated',
+  issues: 'Validated with issues',
+  scan: 'Scan complete',
+};
+const { file, size, scenarios } = scenarioResults;
+---
+
+<figure class="scorecard">
+  <figcaption>
+    <span class="cap-title">OpenAEV threat actor scenario results</span>
+  </figcaption>
+  <table>
+    <thead>
+      <tr>
+        <th scope="col">Scenario</th>
+        <th scope="col" class="num">Runs</th>
+        <th scope="col" class="num">Techniques</th>
+        <th scope="col" class="num">Executed</th>
+        <th scope="col" class="num">Detected</th>
+        <th scope="col">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {scenarios.map((s) => (
+        <tr>
+          <th scope="row">
+            <span class="name">{s.name}</span>
+            {s.chain && <span class="chain">{s.chain}</span>}
+            {s.note && <span class="note">{s.note}</span>}
+          </th>
+          <td class="num mono" data-label="Runs">{s.runs}</td>
+          <td class="num mono" data-label="Techniques">{s.techniques}</td>
+          <td class="num mono" data-label="Executed">{s.executed}</td>
+          <td class="num mono" data-label="Detected">{s.detected}</td>
+          <td><span class={`badge badge-${s.status}`}><span class="dot" aria-hidden="true"></span>{label[s.status]}</span></td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+  <p class="dl">
+    <a class="link" href={file} download><Icon name="download" /> Download the full results <span class="mono">(Excel, {size})</span></a>
+  </p>
+</figure>
+
+<style>
+  .scorecard {
+    margin: 0;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: var(--bg-raised);
+    overflow: hidden;
+  }
+  figcaption {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 6px 16px;
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--line);
+  }
+  .cap-title {
+    color: var(--ink);
+    font-weight: 600;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.92rem;
+  }
+  thead th {
+    padding: 10px 20px;
+    color: var(--muted);
+    font-size: 0.78rem;
+    font-weight: 500;
+    text-align: left;
+    white-space: nowrap;
+    border-bottom: 1px solid var(--line);
+  }
+  thead th.num {
+    text-align: right;
+  }
+  tbody tr + tr {
+    border-top: 1px solid var(--line);
+  }
+  tbody th,
+  tbody td {
+    padding: 14px 20px;
+    vertical-align: top;
+    text-align: left;
+  }
+  .num {
+    text-align: right;
+    white-space: nowrap;
+  }
+  tbody .num {
+    color: var(--ink-2);
+    font-size: 0.84rem;
+    text-align: right;
+  }
+  tbody th {
+    display: grid;
+    gap: 3px;
+    font-weight: 400;
+  }
+  .name {
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .chain,
+  .note {
+    color: var(--muted);
+    font-size: 0.82rem;
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--ink-2);
+    font-size: 0.84rem;
+    white-space: nowrap;
+  }
+  .dot {
+    width: 7px;
+    height: 7px;
+    flex: none;
+    border-radius: 50%;
+    background: var(--muted);
+  }
+  .badge-validated .dot {
+    background: var(--resolved);
+  }
+  .badge-issues .dot {
+    background: var(--warn);
+  }
+  .dl {
+    padding: 16px 20px;
+    border-top: 1px solid var(--line);
+    font-size: 0.92rem;
+  }
+  .dl a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .dl :global(svg) {
+    width: 16px;
+    height: 16px;
+  }
+  .dl .mono {
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+
+  @media (max-width: 720px) {
+    thead {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+    }
+    table,
+    tbody,
+    tr {
+      display: block;
+    }
+    tbody tr {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px 16px;
+      padding: 16px 20px;
+    }
+    tbody th,
+    tbody td {
+      padding: 0;
+    }
+    tbody th,
+    tbody td:last-child {
+      grid-column: 1 / -1;
+    }
+    tbody .num {
+      display: grid;
+      gap: 2px;
+      text-align: left;
+      white-space: normal;
+    }
+    tbody .num::before {
+      content: attr(data-label);
+      color: var(--muted);
+      font-family: var(--font-sans);
+      font-size: 0.74rem;
+    }
+  }
+</style>

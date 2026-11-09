@@ -1,0 +1,136 @@
+---
+import { person } from '../data/site';
+import Icon from './Icon.astro';
+---
+
+<section class="section contact" id="contact" data-ambient="signal" aria-labelledby="contact-title">
+  <div class="wrap">
+    <h2 id="contact-title">Get in touch</h2>
+    <p class="contact-lede">
+      Email is the quickest way to reach me. I am always up for a conversation about detection engineering, purple teaming
+      or AI security.
+    </p>
+    <div class="email-row">
+      <a class="email" href={`mailto:${person.email}`}>
+        <Icon name="mail" />
+        <span>{person.email}</span>
+      </a>
+      <button class="copy mono" type="button" data-copy={person.email} hidden>Copy</button>
+      <span class="copy-status mono" role="status" data-copy-status></span>
+    </div>
+    <ul class="channels">
+      <li><a class="btn btn-line" href={person.linkedin} target="_blank" rel="noopener noreferrer">Message me on LinkedIn <Icon name="external" /></a></li>
+      <li><a class="btn btn-line" href={person.github} target="_blank" rel="noopener noreferrer">See my GitHub <Icon name="external" /></a></li>
+      <li><a class="btn btn-solid" href={person.resume} download><Icon name="download" /> Download résumé</a></li>
+    </ul>
+  </div>
+</section>
+
+<script>
+  const btn = document.querySelector<HTMLButtonElement>('[data-copy]');
+  const status = document.querySelector<HTMLElement>('[data-copy-status]');
+  if (btn && status && navigator.clipboard) {
+    btn.hidden = false;
+    let timer = 0;
+    btn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(btn.dataset.copy!);
+        status.textContent = 'Copied';
+      } catch {
+        status.textContent = 'Copy failed';
+      }
+      btn.toggleAttribute('data-done', true);
+      clearTimeout(timer);
+      timer = window.setTimeout(() => {
+        status.textContent = '';
+        btn.removeAttribute('data-done');
+      }, 2200);
+    });
+  }
+</script>
+
+<style>
+  .contact {
+    padding-block: clamp(100px, 16vh, 180px);
+  }
+  .contact h2 {
+    font-size: var(--step-4);
+    letter-spacing: -0.04em;
+  }
+  .contact-lede {
+    margin-top: 20px;
+    max-width: 56ch;
+    color: var(--ink-2);
+    font-size: var(--step-1);
+    line-height: 1.5;
+  }
+  .email-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 18px;
+    margin-top: 40px;
+  }
+  .copy {
+    padding: 8px 14px;
+    border: 1px solid var(--line-hi);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--ink-2);
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition:
+      border-color 200ms ease,
+      color 200ms ease;
+  }
+  .copy:hover,
+  .copy[data-done] {
+    border-color: var(--resolved);
+    color: var(--resolved);
+  }
+  .copy-status {
+    color: var(--resolved);
+    font-size: 0.82rem;
+  }
+  .email {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--line-hi);
+    color: var(--ink);
+    font-size: var(--step-3);
+    font-weight: 560;
+    letter-spacing: -0.03em;
+    text-decoration: none;
+    transition: border-color 200ms ease, color 200ms ease;
+    overflow-wrap: anywhere;
+  }
+  .email :global(svg) {
+    width: 0.8em;
+    height: 0.8em;
+    color: var(--resolved);
+    flex: none;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .email:hover {
+      border-color: var(--resolved);
+    }
+  }
+  .channels {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 36px;
+  }
+  @media (max-width: 520px) {
+    .email {
+      font-size: 1.35rem;
+    }
+    .channels,
+    .channels li,
+    .channels .btn {
+      width: 100%;
+    }
+  }
+</style>

@@ -1,0 +1,180 @@
+---
+import Icon from './Icon.astro';
+---
+
+<dialog class="viewer" data-viewer aria-label="Screenshot viewer" data-lenis-prevent>
+  <figure class="v-figure">
+    <img class="v-img" data-viewer-img alt="" decoding="async" />
+    <figcaption class="v-cap">
+      <span class="mono v-count" data-viewer-count></span>
+      <span data-viewer-cap></span>
+    </figcaption>
+  </figure>
+  <button class="v-btn v-close" type="button" data-viewer-close aria-label="Close viewer"><Icon name="close" /></button>
+  <button class="v-btn v-prev" type="button" data-viewer-step="-1" aria-label="Previous screenshot"><Icon name="back" /></button>
+  <button class="v-btn v-next" type="button" data-viewer-step="1" aria-label="Next screenshot"><Icon name="arrow" /></button>
+</dialog>
+
+<script>
+  import { lenis } from '../scripts/shell';
+
+  const dialog = document.querySelector<HTMLDialogElement>('[data-viewer]');
+  const links = [...document.querySelectorAll<HTMLAnchorElement>('a.shot-link')];
+  if (dialog && links.length && typeof dialog.showModal === 'function') {
+    const img = dialog.querySelector<HTMLImageElement>('[data-viewer-img]')!;
+    const cap = dialog.querySelector<HTMLElement>('[data-viewer-cap]')!;
+    const count = dialog.querySelector<HTMLElement>('[data-viewer-count]')!;
+    let index = 0;
+
+    const show = (i: number) => {
+      index = (i + links.length) % links.length;
+      const link = links[index];
+      const alt = link.querySelector('img')?.alt ?? '';
+      img.src = link.href;
+      img.alt = alt;
+      cap.textContent = alt;
+      count.textContent = `${index + 1} / ${links.length}`;
+    };
+
+    links.forEach((link, i) =>
+      link.addEventListener('click', (e) => {
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+        e.preventDefault();
+        show(i);
+        dialog.showModal();
+        lenis?.stop();
+      }),
+    );
+
+    dialog.addEventListener('close', () => {
+      lenis?.start();
+      links[index].focus({ preventScroll: true });
+    });
+    dialog.addEventListener('click', (e) => {
+      const t = e.target as HTMLElement;
+      const step = t.closest<HTMLElement>('[data-viewer-step]');
+      if (step) show(index + Number(step.dataset.viewerStep));
+      else if (t.closest('[data-viewer-close]') || t === dialog) dialog.close();
+    });
+    dialog.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') show(index + 1);
+      else if (e.key === 'ArrowLeft') show(index - 1);
+    });
+    if (links.length < 2) dialog.querySelectorAll<HTMLElement>('[data-viewer-step]').forEach((b) => (b.hidden = true));
+  }
+</script>
+
+<style>
+  .viewer {
+    width: 100vw;
+    max-width: none;
+    height: 100dvh;
+    max-height: none;
+    margin: 0;
+    padding: 64px 88px 24px;
+    border: 0;
+    background: rgb(var(--bg-rgb) / 0.985);
+    backdrop-filter: blur(10px);
+    color: var(--ink);
+  }
+  .viewer::backdrop {
+    background: transparent;
+  }
+  .viewer[open] {
+    display: grid;
+    place-items: center;
+    animation: v-in 220ms var(--ease-out);
+  }
+  @keyframes v-in {
+    from {
+      opacity: 0;
+    }
+  }
+  .v-figure {
+    display: grid;
+    gap: 14px;
+    max-width: 100%;
+    max-height: 100%;
+    margin: 0;
+    justify-items: center;
+  }
+  .v-img {
+    max-width: 100%;
+    max-height: calc(100dvh - 160px);
+    width: auto;
+    height: auto;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+  .v-cap {
+    display: flex;
+    gap: 14px;
+    max-width: 72ch;
+    color: var(--ink-2);
+    font-size: 0.92rem;
+    line-height: 1.5;
+  }
+  .v-count {
+    flex: none;
+    color: var(--muted);
+  }
+  .v-btn {
+    position: absolute;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--bg-raised);
+    color: var(--ink);
+    cursor: pointer;
+    transition: border-color 160ms ease;
+  }
+  .v-btn:hover {
+    border-color: var(--line-hi);
+  }
+  .v-btn[hidden] {
+    display: none;
+  }
+  .v-close {
+    top: 14px;
+    right: 18px;
+  }
+  .v-prev,
+  .v-next {
+    top: 50%;
+    translate: 0 -50%;
+  }
+  .v-prev {
+    left: 22px;
+  }
+  .v-next {
+    right: 22px;
+  }
+  @media (max-width: 700px) {
+    .viewer {
+      padding: 64px 12px 84px;
+    }
+    .v-prev,
+    .v-next {
+      top: auto;
+      bottom: 20px;
+      translate: none;
+    }
+    .v-prev {
+      left: calc(50% - 56px);
+    }
+    .v-next {
+      right: calc(50% - 56px);
+    }
+    .v-cap {
+      font-size: 0.85rem;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .viewer[open] {
+      animation: none;
+    }
+  }
+</style>

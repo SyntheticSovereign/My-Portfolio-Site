@@ -1,0 +1,234 @@
+---
+type Tone = 'attack' | 'detect' | 'resolved' | 'muted';
+type Side = 'l' | 'r' | 't' | 'b';
+interface Node { id: string; x: number; y: number; w: number; label: string; sub: string; tone: Tone }
+interface Link { a: string; as: Side; b: string; bs: Side; tone: Tone }
+interface Row { labels: string[]; from: string; lit: number; chain: boolean }
+interface Flow { label: string; nodes: Node[]; links: Link[]; row?: Row }
+
+const flows: Record<string, Flow> = {
+  'aegis-ward': {
+    label: 'Aegis Ward flow: a MITRE ATLAS test prompt reaches the Aegis Ward policy gate, which either allows it through to the local Qwen model or blocks it and sends a security event to the SIEM.',
+    nodes: [
+      { id: 'p', x: 20, y: 112, w: 122, label: 'Prompt', sub: 'ATLAS test', tone: 'attack' },
+      { id: 'g', x: 186, y: 112, w: 128, label: 'Aegis Ward', sub: 'policy gate', tone: 'detect' },
+      { id: 'q', x: 356, y: 40, w: 104, label: 'Qwen', sub: 'allowed', tone: 'resolved' },
+      { id: 'x', x: 356, y: 184, w: 104, label: 'Blocked', sub: 'OTel → SIEM', tone: 'detect' },
+    ],
+    links: [
+      { a: 'p', as: 'r', b: 'g', bs: 'l', tone: 'attack' },
+      { a: 'g', as: 'r', b: 'q', bs: 'l', tone: 'resolved' },
+      { a: 'g', as: 'r', b: 'x', bs: 'l', tone: 'detect' },
+    ],
+  },
+  elevatex: {
+    label: 'ElevateX flow: a Chainlink gold price feed prices the ElevateX ERC-20 token, which settles to wallets on Ethereum.',
+    nodes: [
+      { id: 'f', x: 20, y: 70, w: 126, label: 'Chainlink', sub: 'gold price feed', tone: 'muted' },
+      { id: 'c', x: 182, y: 70, w: 120, label: 'ElevateX', sub: 'ERC-20', tone: 'detect' },
+      { id: 'w', x: 338, y: 70, w: 122, label: 'Wallets', sub: 'Ethereum', tone: 'resolved' },
+    ],
+    links: [
+      { a: 'f', as: 'r', b: 'c', bs: 'l', tone: 'detect' },
+      { a: 'c', as: 'r', b: 'w', bs: 'l', tone: 'resolved' },
+    ],
+    row: { labels: ['#01', '#02', '#03', '#04', '#05', '#06', '#07'], from: 'c', lit: 6, chain: true },
+  },
+  'azure-soc': {
+    label: 'Azure SOC flow: a phishing or business email compromise attack is seen by Defender XDR and Entra ID, correlated in Microsoft Sentinel with KQL, summarised by Azure OpenAI through a Logic App, approved by an analyst and written up as a case file.',
+    nodes: [
+      { id: 'a', x: 20, y: 18, w: 128, label: 'Phishing · BEC', sub: 'attack', tone: 'attack' },
+      { id: 'd', x: 20, y: 112, w: 128, label: 'Defender XDR', sub: 'endpoint · email', tone: 'detect' },
+      { id: 'e', x: 20, y: 206, w: 128, label: 'Entra ID', sub: 'sign-in logs', tone: 'detect' },
+      { id: 's', x: 184, y: 112, w: 120, label: 'Sentinel', sub: '155 KQL queries', tone: 'detect' },
+      { id: 'o', x: 340, y: 18, w: 120, label: 'Azure OpenAI', sub: 'cited summary', tone: 'muted' },
+      { id: 'h', x: 340, y: 112, w: 120, label: 'Analyst', sub: 'approves', tone: 'resolved' },
+      { id: 'c', x: 340, y: 206, w: 120, label: 'Case file', sub: 'playbook', tone: 'resolved' },
+    ],
+    links: [
+      { a: 'a', as: 'b', b: 'd', bs: 't', tone: 'attack' },
+      { a: 'd', as: 'r', b: 's', bs: 'l', tone: 'detect' },
+      { a: 'e', as: 'r', b: 's', bs: 'l', tone: 'detect' },
+      { a: 's', as: 'r', b: 'o', bs: 'l', tone: 'muted' },
+      { a: 'o', as: 'b', b: 'h', bs: 't', tone: 'muted' },
+      { a: 's', as: 'r', b: 'h', bs: 'l', tone: 'detect' },
+      { a: 'h', as: 'b', b: 'c', bs: 't', tone: 'resolved' },
+    ],
+  },
+  aemo: {
+    label: 'AEMO governance model: a live risk register feeds the CISO, who reports to the board and its dashboard, applies regulatory overlays, and runs one baseline across six branches: Melbourne, Sydney, Brisbane, Perth, Adelaide and London.',
+    nodes: [
+      { id: 'b', x: 180, y: 12, w: 120, label: 'Board', sub: 'risk appetite', tone: 'resolved' },
+      { id: 'd', x: 340, y: 12, w: 120, label: 'Dashboard', sub: 'quarterly', tone: 'resolved' },
+      { id: 'r', x: 20, y: 96, w: 120, label: 'Risk register', sub: 'live', tone: 'muted' },
+      { id: 'c', x: 180, y: 96, w: 120, label: 'CISO', sub: 'one baseline', tone: 'detect' },
+      { id: 'o', x: 340, y: 96, w: 120, label: 'Overlays', sub: 'SOCI · UK GDPR', tone: 'detect' },
+    ],
+    links: [
+      { a: 'r', as: 'r', b: 'c', bs: 'l', tone: 'muted' },
+      { a: 'c', as: 't', b: 'b', bs: 'b', tone: 'resolved' },
+      { a: 'b', as: 'r', b: 'd', bs: 'l', tone: 'resolved' },
+      { a: 'c', as: 'r', b: 'o', bs: 'l', tone: 'detect' },
+    ],
+    row: { labels: ['MEL', 'SYD', 'BNE', 'PER', 'ADL', 'LON'], from: 'c', lit: 0, chain: false },
+  },
+  cerebro: {
+    label: 'Cerebro flow: a question about logs, an IP address or an email goes to Cerebro in Copilot Studio, which returns a log review, a reputation check, a phishing verdict or a playbook.',
+    nodes: [
+      { id: 'i', x: 20, y: 112, w: 124, label: 'Question', sub: 'logs · IP · email', tone: 'muted' },
+      { id: 'c', x: 180, y: 112, w: 128, label: 'Cerebro', sub: 'Copilot Studio', tone: 'detect' },
+      { id: 'o1', x: 348, y: 14, w: 112, label: 'Log review', sub: 'compromise', tone: 'resolved' },
+      { id: 'o2', x: 348, y: 78, w: 112, label: 'Reputation', sub: 'IP · domain', tone: 'resolved' },
+      { id: 'o3', x: 348, y: 146, w: 112, label: 'Phishing', sub: 'email verdict', tone: 'resolved' },
+      { id: 'o4', x: 348, y: 210, w: 112, label: 'Playbook', sub: 'next step', tone: 'resolved' },
+    ],
+    links: [
+      { a: 'i', as: 'r', b: 'c', bs: 'l', tone: 'muted' },
+      { a: 'c', as: 'r', b: 'o1', bs: 'l', tone: 'resolved' },
+      { a: 'c', as: 'r', b: 'o2', bs: 'l', tone: 'resolved' },
+      { a: 'c', as: 'r', b: 'o3', bs: 'l', tone: 'resolved' },
+      { a: 'c', as: 'r', b: 'o4', bs: 'l', tone: 'resolved' },
+    ],
+  },
+};
+
+const { slug, fill = false } = Astro.props as { slug: string; fill?: boolean };
+const flow = flows[slug];
+const H = 46;
+const at = (id: string, side: Side) => {
+  const n = flow.nodes.find((n) => n.id === id)!;
+  if (side === 'l') return [n.x, n.y + H / 2];
+  if (side === 'r') return [n.x + n.w, n.y + H / 2];
+  if (side === 't') return [n.x + n.w / 2, n.y];
+  return [n.x + n.w / 2, n.y + H];
+};
+const paths = (flow?.links ?? []).map((l, i) => {
+  const [ax, ay] = at(l.a, l.as);
+  const [bx, by] = at(l.b, l.bs);
+  const dx = (bx - ax) / 2;
+  return { id: `${slug}-${i}`, tone: l.tone, d: `M${ax},${ay} C${ax + dx},${ay} ${bx - dx},${by} ${bx},${by}`, dur: 2 + (i % 3) * 0.35, begin: i * 0.5 };
+});
+const row = flow?.row;
+const ROW_Y = 196;
+const gap = row ? (row.chain ? 24 : 12) : 0;
+const bw = row ? (440 - gap * (row.labels.length - 1)) / row.labels.length : 0;
+const boxes = row ? row.labels.map((label, i) => ({ label, x: 20 + i * (bw + gap), lit: i === row.lit })) : [];
+const feed = row ? at(row.from, 'b') : [0, 0];
+---
+
+{flow && (
+  <svg class:list={['cflow', { fill }]} viewBox="0 0 480 270" role="img" aria-label={flow.label}>
+    <defs>{paths.map((p) => <path id={p.id} d={p.d} />)}</defs>
+    {row && (
+      <g aria-hidden="true">
+        {row.chain ? (
+          <line x1={feed[0]} y1={feed[1]} x2={feed[0]} y2={ROW_Y} class="ln ln-muted" />
+        ) : (
+          <>
+            <line x1={feed[0]} y1={feed[1]} x2={feed[0]} y2={ROW_Y - 18} class="ln ln-detect" />
+            <line x1={20 + bw / 2} y1={ROW_Y - 18} x2={460 - bw / 2} y2={ROW_Y - 18} class="ln ln-detect" />
+            {boxes.map((b) => <line x1={b.x + bw / 2} y1={ROW_Y - 18} x2={b.x + bw / 2} y2={ROW_Y} class="ln ln-detect" />)}
+          </>
+        )}
+        {row.chain && boxes.slice(1).map((b) => <line x1={b.x - gap} y1={ROW_Y + 18} x2={b.x} y2={ROW_Y + 18} class="ln ln-muted" />)}
+        {boxes.map((b) => (
+          <g transform={`translate(${b.x} ${ROW_Y})`}>
+            <rect width={bw} height="36" rx="3" class={b.lit ? 'nd nd-detect' : 'nd'} />
+            <text x={bw / 2} y="22" text-anchor="middle" class="ns">{b.label}</text>
+          </g>
+        ))}
+      </g>
+    )}
+    <g>{paths.map((p) => <use href={`#${p.id}`} class={`ln ln-${p.tone}`} />)}</g>
+    <g class="pulses">
+      {paths.map((p) => (
+        <circle r="3.2" class={`pl pl-${p.tone}`}>
+          <animateMotion dur={`${p.dur}s`} begin={`-${p.begin}s`} repeatCount="indefinite">
+            <mpath href={`#${p.id}`} />
+          </animateMotion>
+        </circle>
+      ))}
+    </g>
+    <g>
+      {flow.nodes.map((n) => (
+        <g transform={`translate(${n.x} ${n.y})`}>
+          <rect width={n.w} height={H} rx="3" class={`nd nd-${n.tone}`} />
+          <text x="12" y="20" class="nl">{n.label}</text>
+          <text x="12" y="36" class="ns">{n.sub}</text>
+        </g>
+      ))}
+    </g>
+  </svg>
+)}
+
+<style>
+  .cflow {
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 18px 20px;
+  }
+  .cflow.fill {
+    position: absolute;
+    inset: 0;
+    padding: clamp(16px, 3vw, 36px);
+  }
+  .ln {
+    fill: none;
+    stroke-width: 1.2;
+  }
+  .ln-attack {
+    stroke: rgb(255 91 79 / 0.55);
+  }
+  .ln-detect {
+    stroke: rgb(77 163 255 / 0.4);
+  }
+  .ln-resolved {
+    stroke: rgb(62 214 142 / 0.45);
+  }
+  .ln-muted {
+    stroke: var(--line-hi);
+    stroke-dasharray: 3 4;
+  }
+  .nd {
+    fill: var(--panel);
+    stroke: var(--line-hi);
+  }
+  .nd-attack {
+    stroke: rgb(255 91 79 / 0.6);
+  }
+  .nd-detect {
+    stroke: rgb(77 163 255 / 0.55);
+  }
+  .nd-resolved {
+    stroke: rgb(62 214 142 / 0.5);
+  }
+  .nl {
+    fill: var(--ink);
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 560;
+  }
+  .ns {
+    fill: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+  }
+  .pl-attack {
+    fill: var(--attack);
+  }
+  .pl-detect {
+    fill: var(--detect);
+  }
+  .pl-resolved {
+    fill: var(--resolved);
+  }
+  .pl-muted {
+    fill: var(--muted);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pulses {
+      display: none;
+    }
+  }
+</style>

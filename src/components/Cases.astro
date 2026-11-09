@@ -1,0 +1,529 @@
+---
+import { Image } from 'astro:assets';
+import { cases, recognition, orgNames } from '../data/site';
+import latrobe from '../assets/orgs/latrobe.png';
+import nab from '../assets/orgs/nab.png';
+import google from '../assets/orgs/google.png';
+import awImpact from '../assets/awards/impact.jpg';
+import awGoogle from '../assets/awards/google.jpg';
+import awNab from '../assets/awards/nab.jpg';
+import awCareer from '../assets/awards/career-ready.jpg';
+import Icon from './Icon.astro';
+import TrinityMap from './TrinityMap.astro';
+import CaseFlow from './CaseFlow.astro';
+
+const logos = { latrobe, nab, google };
+const photos = { impact: awImpact, google: awGoogle, nab: awNab, 'career-ready': awCareer };
+const [trinity, aegis, azure, ...rest] = cases;
+const rows = [aegis, ...rest];
+---
+
+<section class="section" id="projects" data-ambient="cluster" aria-labelledby="cases-title">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 id="cases-title">Projects</h2>
+      <p>Six projects, written up the way I write up incidents: what happened, what I built, and how I know it works.</p>
+    </div>
+
+    <article class="case case-lead">
+      <a class="case-link" href={`/work/${trinity.slug}/`} aria-label={`${trinity.title}: view the project`}></a>
+      <div class="case-copy">
+        <h3>{trinity.title}</h3>
+        <p class="case-id mono"><span class="dot dot-resolved" aria-hidden="true"></span>{trinity.id} · {trinity.status}</p>
+        <p class="case-short">{trinity.short}</p>
+        <p class="case-sum">{trinity.summary}</p>
+        <ul class="tags" aria-label="Stack">
+          {trinity.stack.slice(0, 8).map((s) => <li class="tag">{s}</li>)}
+        </ul>
+        <span class="case-cta">View the project <Icon name="arrow" class="arrow" /></span>
+      </div>
+      <div class="case-visual" data-story>
+        <TrinityMap />
+        <div class="story-cap" aria-hidden="true">
+          <ol class="story-bar">
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(() => <li></li>)}
+          </ol>
+          <p><span class="mono" data-story-step></span> <span data-story-text></span></p>
+        </div>
+      </div>
+    </article>
+
+    <article class="case case-shot">
+      <a class="case-link" href={`/work/${azure.slug}/`} aria-label={`${azure.title}: view the project`}></a>
+      <div class="case-visual">
+        <CaseFlow slug={azure.slug} fill />
+      </div>
+      <div class="case-copy">
+        <h3>{azure.title}</h3>
+        <p class="case-id mono"><span class="dot dot-detect" aria-hidden="true"></span>{azure.id} · {azure.status}</p>
+        <p class="case-short">{azure.short}</p>
+        <p class="case-sum">{azure.summary}</p>
+        <ul class="tags" aria-label="Stack">
+          {azure.stack.slice(0, 6).map((s) => <li class="tag">{s}</li>)}
+        </ul>
+        <span class="case-cta">View the project <Icon name="arrow" class="arrow" /></span>
+      </div>
+    </article>
+
+    <ul class="case-grid">
+      {rows.map((c) => (
+        <li>
+          <a class="mini-link" href={`/work/${c.slug}/`}>
+            <span class="mini-visual">
+              <CaseFlow slug={c.slug} />
+            </span>
+            <span class="mini-copy">
+              <span class="row-id mono">{c.id} · {c.status}</span>
+              <span class="row-title">{c.title}</span>
+              <span class="row-short">{c.short}</span>
+              <span class="case-cta">View the project <Icon name="arrow" class="arrow" /></span>
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+
+    <div class="recognition" id="awards" aria-labelledby="rec-title">
+      <h3 class="rec-title" id="rec-title">Awards</h3>
+      <ul class="rec-grid">
+        {recognition.map((r) => (
+          <li class="rec">
+            <span class="rec-photo">
+              <Image src={photos[r.image]} alt={r.alt} widths={[400, 640]} sizes="(max-width: 520px) 100vw, (max-width: 1100px) 50vw, 25vw" class={`focus-${r.image}`} />
+            </span>
+            <span class="rec-body">
+              <span class="rec-logos">
+                {r.orgs.map((o) => (
+                  <Image class="rec-logo" src={logos[o]} alt={orgNames[o]} width={48} height={48} />
+                ))}
+              </span>
+              {r.when && <span class="rec-meta mono">{r.when}</span>}
+              <span class="rec-name">{r.title}</span>
+              <span class="rec-by">{r.by}</span>
+              <span class="rec-text">{r.text}</span>
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  import { reducedMotion } from '../scripts/shell';
+
+  gsap.registerPlugin(ScrollTrigger);
+  const steps = [
+    { nodes: ['cti', 'aev'], links: ['p2'], text: 'OpenCTI hands OpenAEV a real threat actor to imitate.' },
+    { nodes: ['ep'], links: ['p1'], text: 'OpenAEV runs the attack on a Windows host.' },
+    { nodes: ['el', 'sp', 'af'], links: ['p3', 'p4', 'p5'], text: 'Sysmon telemetry reaches all three SIEMs.' },
+    { nodes: ['dac'], links: ['p11'], text: 'The rules that fire ship from Git, tested by Forgejo CI first.' },
+    { nodes: ['rt'], links: ['p6', 'p7', 'p8'], text: 'Each SIEM alerts, and the router normalises the alerts.' },
+    { nodes: ['ai'], links: ['p9'], text: 'Laya clears the noise; Qwen and Azrael triage what is left.' },
+    { nodes: ['th'], links: ['p10'], text: 'TheHive opens the case for an analyst.' },
+    { nodes: ['aw'], links: ['p12'], text: 'Aegis Ward blocks a prompt injection; the evidence lands in AegisForge.' },
+    { nodes: ['vc'], links: ['p13', 'p14'], text: 'Collectors match each alert to its attack and score it in OpenAEV. Proven, not assumed.' },
+  ];
+  const card = document.querySelector<HTMLElement>('.case-lead');
+  const visual = card?.querySelector<HTMLElement>('[data-story]');
+  const map = visual?.querySelector<SVGSVGElement>('.tmap');
+  if (card && visual && map && !reducedMotion()) {
+    const stepEl = visual.querySelector<HTMLElement>('[data-story-step]')!;
+    const textEl = visual.querySelector<HTMLElement>('[data-story-text]')!;
+    const bars = [...visual.querySelectorAll<HTMLElement>('.story-bar li')];
+    let shown = -1;
+    const setStage = (k: number) => {
+      if (k === shown) return;
+      shown = k;
+      if (k < 0) {
+        map.removeAttribute('data-stage');
+        visual.removeAttribute('data-playing');
+        return;
+      }
+      map.setAttribute('data-stage', String(k + 1));
+      visual.setAttribute('data-playing', '');
+      const nodes = new Set(steps.slice(0, k + 1).flatMap((s) => s.nodes));
+      const links = new Set(steps.slice(0, k + 1).flatMap((s) => s.links));
+      map.querySelectorAll<SVGElement>('[data-n]').forEach((el) => el.classList.toggle('on', nodes.has(el.dataset.n!)));
+      map.querySelectorAll<SVGElement>('[data-l]').forEach((el) => el.classList.toggle('on', links.has(el.dataset.l!)));
+      bars.forEach((b, i) => b.toggleAttribute('data-done', i <= k));
+      stepEl.textContent = `${String(k + 1).padStart(2, '0')} / ${String(steps.length).padStart(2, '0')}`;
+      textEl.textContent = steps[k].text;
+    };
+
+    gsap.matchMedia().add('(min-width: 1100px) and (min-height: 760px)', () => {
+      const st = ScrollTrigger.create({
+        trigger: card,
+        start: 'center center',
+        end: '+=2100',
+        pin: true,
+        onUpdate: (self) => setStage(self.progress <= 0 ? -1 : Math.min(steps.length - 1, Math.floor(self.progress * steps.length))),
+        onLeaveBack: () => setStage(-1),
+      });
+      return () => {
+        st.kill();
+        setStage(-1);
+      };
+    });
+  }
+</script>
+
+<style>
+  .case {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: var(--bg-raised);
+    overflow: hidden;
+    transition:
+      border-color 200ms ease,
+      transform 200ms var(--ease-out);
+  }
+  .case + .case {
+    margin-top: 20px;
+  }
+  .case-lead {
+    transition: border-color 200ms ease;
+  }
+  .case-shot {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  }
+  .case-link {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    border-radius: inherit;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .case:hover {
+      border-color: var(--line-hi);
+      transform: translateY(-2px);
+    }
+    .case-lead:hover {
+      transform: none;
+    }
+    .case:hover .case-cta :global(.arrow) {
+      transform: translateX(3px);
+    }
+    .case:hover .shot :global(img) {
+      transform: scale(1.025);
+    }
+  }
+  .case-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: clamp(24px, 3.5vw, 44px);
+  }
+  .case-id {
+    margin-top: -6px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+  .case h3 {
+    font-size: var(--step-3);
+    letter-spacing: -0.03em;
+  }
+  .case-short {
+    color: var(--ink);
+    font-size: var(--step-1);
+    line-height: 1.45;
+  }
+  .case-sum {
+    color: var(--ink-2);
+    max-width: 58ch;
+  }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 4px;
+  }
+  .case-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: auto;
+    padding-top: 12px;
+    font-weight: 560;
+  }
+  .case-cta :global(svg) {
+    width: 16px;
+    height: 16px;
+    transition: transform 160ms var(--ease-out);
+  }
+  .case-visual {
+    position: relative;
+    min-height: 360px;
+    border-left: 1px solid var(--line);
+    background: var(--bg);
+  }
+  .story-cap {
+    position: absolute;
+    left: clamp(16px, 3vw, 36px);
+    right: clamp(16px, 3vw, 36px);
+    bottom: 18px;
+    display: grid;
+    gap: 10px;
+    opacity: 0;
+    transform: translateY(6px);
+    transition:
+      opacity 300ms ease,
+      transform 300ms var(--ease-out);
+  }
+  [data-story] :global(.tmap) {
+    padding-bottom: 84px;
+  }
+  [data-playing] .story-cap {
+    opacity: 1;
+    transform: none;
+  }
+  .story-bar {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    gap: 6px;
+  }
+  .story-bar li {
+    height: 2px;
+    border-radius: 2px;
+    background: var(--line-hi);
+    transition: background-color 300ms ease;
+  }
+  .story-bar li[data-done] {
+    background: var(--resolved);
+  }
+  .story-cap p {
+    color: var(--ink);
+    font-size: 0.95rem;
+  }
+  .story-cap .mono {
+    margin-right: 8px;
+    color: var(--resolved);
+    font-size: 0.8rem;
+  }
+  .shot {
+    border-left: 0;
+    border-right: 1px solid var(--line);
+    overflow: hidden;
+  }
+  .shot :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: left top;
+    transition: transform 500ms var(--ease-out);
+  }
+
+  .case-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+  }
+  .mini-link {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: var(--bg-raised);
+    overflow: hidden;
+    color: var(--ink);
+    text-decoration: none;
+    transition:
+      border-color 200ms ease,
+      transform 200ms var(--ease-out);
+  }
+  .mini-visual {
+    display: block;
+    aspect-ratio: 16 / 9;
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+    overflow: hidden;
+  }
+  .mini-visual :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: left top;
+    transition: transform 400ms var(--ease-out);
+  }
+  .mini-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+    padding: 22px 24px 24px;
+  }
+  .mini-copy .case-cta {
+    margin-top: auto;
+    padding-top: 6px;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .mini-link:hover {
+      border-color: var(--line-hi);
+      transform: translateY(-2px);
+    }
+    .mini-link:hover :global(.arrow) {
+      transform: translateX(3px);
+    }
+    .mini-link:hover .mini-visual :global(img) {
+      transform: scale(1.025);
+    }
+  }
+  .row-id {
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+  .row-title {
+    font-size: var(--step-2);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+  .row-short {
+    color: var(--ink-2);
+  }
+
+  .recognition {
+    margin-top: clamp(64px, 10vh, 112px);
+  }
+  .rec-title {
+    font-size: var(--step-2);
+    letter-spacing: -0.02em;
+    margin-bottom: 24px;
+  }
+  .rec-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+  }
+  .rec {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: var(--bg-raised);
+    overflow: hidden;
+  }
+  .rec-photo {
+    position: relative;
+    display: block;
+    aspect-ratio: 4 / 3;
+    border-bottom: 1px solid var(--line);
+    overflow: hidden;
+  }
+  .rec-photo > :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 500ms var(--ease-out);
+  }
+  .rec-photo :global(.focus-impact) {
+    object-position: 50% 40%;
+  }
+  .rec-photo :global(.focus-nab) {
+    object-position: 50% 62%;
+  }
+  .rec-photo :global(.focus-google) {
+    object-position: 50% 35%;
+  }
+  .rec-photo :global(.focus-career-ready) {
+    object-position: 30% 50%;
+  }
+  .rec-logos {
+    display: flex;
+    margin: -38px 0 10px;
+    position: relative;
+  }
+  .rec-logo {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    border: 2px solid var(--bg-raised);
+    background: #fff;
+    object-fit: cover;
+  }
+  .rec-logo + .rec-logo {
+    margin-left: -10px;
+  }
+  .rec-body {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 0 20px 22px;
+  }
+  .rec-meta {
+    color: var(--muted);
+    font-size: 0.78rem;
+  }
+  .rec-name {
+    font-weight: 600;
+    font-size: 1.08rem;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+  }
+  .rec-by {
+    color: var(--ink-2);
+    font-size: 0.9rem;
+  }
+  .rec-text {
+    margin-top: 6px;
+    color: var(--muted);
+    font-size: 0.88rem;
+    line-height: 1.55;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .rec {
+      transition:
+        transform 200ms var(--ease-out),
+        border-color 200ms ease;
+    }
+    .rec:hover {
+      transform: translateY(-3px);
+      border-color: var(--line-hi);
+    }
+    .rec:hover .rec-photo > :global(img) {
+      transform: scale(1.04);
+    }
+  }
+  @media (max-width: 1100px) {
+    .rec-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 700px) {
+    .case-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+  @media (max-width: 520px) {
+    .rec-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  @media (max-width: 960px) {
+    .case,
+    .case-shot {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .case-visual {
+      border-left: 0;
+      border-top: 1px solid var(--line);
+      min-height: 300px;
+    }
+    .case-shot .case-visual {
+      order: 2;
+      border-right: 0;
+    }
+  }
+</style>
