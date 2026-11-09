@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="340" viewBox="0 0 1280 340" role="img" aria-label="Tanvir Ahmed Aadeef, detection engineer">
+<defs>
+<pattern id="g" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0H0V32" fill="none" stroke="#1d2630" stroke-width="1" opacity=".55"/></pattern>
+<radialGradient id="v" cx="78%" cy="50%" r="60%"><stop offset="0" stop-color="#4da3ff" stop-opacity=".10"/><stop offset="1" stop-color="#090c10" stop-opacity="0"/></radialGradient>
+<linearGradient id="fade" x1="0" x2="1"><stop offset="0" stop-color="#090c10"/><stop offset=".45" stop-color="#090c10" stop-opacity=".85"/><stop offset="1" stop-color="#090c10" stop-opacity="0"/></linearGradient>
+<style>
+.n{font-family:'Segoe UI',-apple-system,'Helvetica Neue',Arial,sans-serif}
+.m{font-family:'Cascadia Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+</style>
+</defs>
+<rect width="1280" height="340" rx="10" fill="#090c10"/><rect width="1280" height="340" rx="10" fill="url(#g)"/><rect width="1280" height="340" rx="10" fill="url(#v)"/>
+<line x1="1010" y1="170" x2="1040.5" y2="56.0" stroke="#2b3744" stroke-width="1.4"/>
+<line x1="1040.5" y1="56.0" x2="1124.0" y2="139.5" stroke="#1d2630" stroke-width="1"/>
+<line x1="1010" y1="170" x2="1124.0" y2="139.5" stroke="#2b3744" stroke-width="1.4"/>
+<line x1="1124.0" y1="139.5" x2="1093.4" y2="253.4" stroke="#1d2630" stroke-width="1"/>
+<line x1="1010" y1="170" x2="1093.4" y2="253.4" stroke="#2b3744" stroke-width="1.4"/>
+<line x1="1093.4" y1="253.4" x2="979.5" y2="284.0" stroke="#1d2630" stroke-width="1"/>
+<line x1="1010" y1="170" x2="979.5" y2="284.0" stroke="#2b3744" stroke-width="1.4"/>
+<line x1="979.5" y1="284.0" x2="896.0" y2="200.5" stroke="#1d2630" stroke-width="1"/>
+<line x1="1010" y1="170" x2="896.0" y2="200.5" stroke="#2b3744" stroke-width="1.4"/>
+<line x1="896.0" y1="200.5" x2="926.6" y2="86.6" stroke="#1d2630" stroke-width="1"/>
+<line x1="1010" y1="170" x2="926.6" y2="86.6" stroke="#2b3744" stroke-width="1.4"/>
+<line x1="926.6" y1="86.6" x2="1040.5" y2="56.0" stroke="#1d2630" stroke-width="1"/>
+<line x1="1040.5" y1="56.0" x2="1023.3" y2="15.5" stroke="#1d2630" stroke-width="1"/>
+<line x1="1040.5" y1="56.0" x2="1051.9" y2="13.5" stroke="#1d2630" stroke-width="1"/>
+<line x1="1040.5" y1="56.0" x2="1075.7" y2="29.5" stroke="#1d2630" stroke-width="1"/>
+<line x1="1124.0" y1="139.5" x2="1150.5" y2="104.3" stroke="#1d2630" stroke-width="1"/>
+<line x1="1124.0" y1="139.5" x2="1166.5" y2="128.1" stroke="#1d2630" stroke-width="1"/>
+<line x1="1124.0" y1="139.5" x2="1164.5" y2="156.7" stroke="#1d2630" stroke-width="1"/>
+<line x1="1093.4" y1="253.4" x2="1137.1" y2="258.8" stroke="#1d2630" stroke-width="1"/>
+<line x1="1093.4" y1="253.4" x2="1124.6" y2="284.6" stroke="#1d2630" stroke-width="1"/>
+<line x1="1093.4" y1="253.4" x2="1098.8" y2="297.1" stroke="#1d2630" stroke-width="1"/>
+<line x1="979.5" y1="284.0" x2="996.7" y2="324.5" stroke="#1d2630" stroke-width="1"/>
+<line x1="979.5" y1="284.0" x2="968.1" y2="326.5" stroke="#1d2630" stroke-width="1"/>
+<line x1="979.5" y1="284.0" x2="944.3" y2="310.5" stroke="#1d2630" stroke-width="1"/>
+<line x1="896.0" y1="200.5" x2="869.5" y2="235.7" stroke="#1d2630" stroke-width="1"/>
+<line x1="896.0" y1="200.5" x2="853.5" y2="211.9" stroke="#1d2630" stroke-width="1"/>
+<line x1="896.0" y1="200.5" x2="855.5" y2="183.3" stroke="#1d2630" stroke-width="1"/>
+<line x1="926.6" y1="86.6" x2="882.9" y2="81.2" stroke="#1d2630" stroke-width="1"/>
+<line x1="926.6" y1="86.6" x2="895.4" y2="55.4" stroke="#1d2630" stroke-width="1"/>
+<line x1="926.6" y1="86.6" x2="921.2" y2="42.9" stroke="#1d2630" stroke-width="1"/>
+<circle r="2" fill="#8d9aa8" opacity=".8"><animateMotion dur="2.20s" begin="0.0s" repeatCount="indefinite" path="M1040.5,56.0 L1010,170"/></circle>
+<circle r="2" fill="#8d9aa8" opacity=".8"><animateMotion dur="2.57s" begin="0.4s" repeatCount="indefinite" path="M1124.0,139.5 L1010,170"/></circle>
+<circle r="2" fill="#8d9aa8" opacity=".8"><animateMotion dur="2.94s" begin="0.8s" repeatCount="indefinite" path="M1093.4,253.4 L1010,170"/></circle>
+<circle r="2" fill="#8d9aa8" opacity=".8"><animateMotion dur="3.31s" begin="1.2s" repeatCount="indefinite" path="M979.5,284.0 L1010,170"/></circle>
+<circle r="2" fill="#8d9aa8" opacity=".8"><animateMotion dur="3.68s" begin="1.6s" repeatCount="indefinite" path="M896.0,200.5 L1010,170"/></circle>
+<circle r="2" fill="#8d9aa8" opacity=".8"><animateMotion dur="4.05s" begin="2.0s" repeatCount="indefinite" path="M926.6,86.6 L1010,170"/></circle>
+<circle cx="1023.3" cy="15.5" r="3" fill="#b4c0cc" opacity=".75"/>
+<circle cx="1051.9" cy="13.5" r="3" fill="#b4c0cc" opacity=".75"/>
+<circle cx="1075.7" cy="29.5" r="3" fill="#b4c0cc" opacity=".75"/>
+<circle cx="1150.5" cy="104.3" r="3" fill="#b4c0cc" opacity=".75"/>
+<circle cx="1164.5" cy="156.7" r="3" fill="#b4c0cc" opacity=".75"/>
+<circle cx="1137.1" cy="258.8" r="3" fill="#b4c0cc" opacity=".75"/>
+<circle cx="1124.6" cy="284.6" r="3" fill="#b4c0cc" opacity=".75"/>
+<circle cx="1098.8" cy="297.1" r="3" fill="#b4c0cc" opacity=".75"/>
+<circle cx="996.7" cy="324.5" r="3" fill="#b4c0cc" opacity=".75"/>
+<circle cx="968.1" cy="326.5" r="3" fill="#b4c0cc" opacity=".75"/>
+<circle cx="944.3" cy="310.5" r="3" fill="#b4c0cc" opacity=".75"/>
+<circle cx="869.5" cy="235.7" r="3" fill="#b4c0cc" opacity=".75"/>
+<circle cx="853.5" cy="211.9" r="3" fill="#b4c0cc" opacity=".75"/>
+<circle cx="855.5" cy="183.3" r="3" fill="#b4c0cc" opacity=".75"/>
+<circle cx="882.9" cy="81.2" r="3" fill="#b4c0cc" opacity=".75"/>
+<circle cx="895.4" cy="55.4" r="3" fill="#b4c0cc" opacity=".75"/>
+<circle cx="921.2" cy="42.9" r="3" fill="#b4c0cc" opacity=".75"/>
+<circle cx="1166.5" cy="128.1" r="4" fill="#b4c0cc">
+<animate attributeName="fill" dur="7s" repeatCount="indefinite" keyTimes="0;.12;.14;.78;.80;.96;1" values="#b4c0cc;#b4c0cc;#ff5b4f;#ff5b4f;#3ed68e;#3ed68e;#b4c0cc"/></circle>
+<circle cx="1166.5" cy="128.1" r="4" fill="none" stroke="#ff5b4f" stroke-width="1.5" opacity="0">
+<animate attributeName="r" dur="7s" repeatCount="indefinite" keyTimes="0;.13;.26;1" values="4;4;20;20"/>
+<animate attributeName="opacity" dur="7s" repeatCount="indefinite" keyTimes="0;.13;.14;.26;1" values="0;0;.9;0;0"/></circle>
+<circle cx="1040.5" cy="56.0" r="5" fill="#10151b" stroke="#4da3ff" stroke-width="1.4"/>
+<circle cx="1124.0" cy="139.5" r="5" fill="#10151b" stroke="#4da3ff" stroke-width="1.4"/>
+<circle cx="1093.4" cy="253.4" r="5" fill="#10151b" stroke="#4da3ff" stroke-width="1.4"/>
+<circle cx="979.5" cy="284.0" r="5" fill="#10151b" stroke="#4da3ff" stroke-width="1.4"/>
+<circle cx="896.0" cy="200.5" r="5" fill="#10151b" stroke="#4da3ff" stroke-width="1.4"/>
+<circle cx="926.6" cy="86.6" r="5" fill="#10151b" stroke="#4da3ff" stroke-width="1.4"/>
+<circle cx="1010" cy="170" r="30" fill="none" stroke="#4da3ff" stroke-width="2" opacity="0">
+<animate attributeName="r" dur="7s" repeatCount="indefinite" keyTimes="0;.40;.62;1" values="12;12;72;72"/>
+<animate attributeName="opacity" dur="7s" repeatCount="indefinite" keyTimes="0;.40;.41;.62;1" values="0;0;.9;0;0"/></circle>
+<circle cx="1010" cy="170" r="11" fill="#0d1116" stroke="#4da3ff" stroke-width="2"/>
+<circle cx="1010" cy="170" r="4.5" fill="#4da3ff"><animate attributeName="opacity" dur="2.4s" repeatCount="indefinite" values="1;.45;1"/></circle>
+<text x="1010" y="204" text-anchor="middle" class="m" font-size="11" letter-spacing="2" fill="#8d9aa8">SIEM</text>
+<circle r="4" fill="#ff5b4f" opacity="0">
+<animateMotion dur="7s" repeatCount="indefinite" keyPoints="0;0;1;1" keyTimes="0;.15;.40;1" calcMode="linear" path="M1166.5,128.1 L1124.0,139.5 L1010,170"/>
+<animate attributeName="opacity" dur="7s" repeatCount="indefinite" keyTimes="0;.15;.16;.40;.41;1" values="0;0;1;1;0;0"/></circle>
+<circle r="4" fill="#4da3ff" opacity="0">
+<animateMotion dur="7s" repeatCount="indefinite" keyPoints="0;0;1;1" keyTimes="0;.50;.78;1" calcMode="linear" path="M1010,170 L1124.0,139.5 L1166.5,128.1"/>
+<animate attributeName="opacity" dur="7s" repeatCount="indefinite" keyTimes="0;.50;.51;.78;.79;1" values="0;0;1;1;0;0"/></circle>
+<rect width="760" height="340" fill="url(#fade)"/>
+<text x="64" y="92" class="m" font-size="14" letter-spacing="3" fill="#8d9aa8">SYNTHETICSOVEREIGN / PORTFOLIO</text>
+<text x="62" y="160" class="n" font-size="58" font-weight="700" fill="#e6ecf2" letter-spacing="-1">Tanvir Ahmed Aadeef</text>
+<text x="64" y="200" class="n" font-size="22" fill="#b4c0cc">Detection engineer · Melbourne</text>
+<rect x="56" y="240" width="560" height="42" rx="4" fill="#10151b" stroke="#1d2630"/>
+<g opacity="0"><animate attributeName="opacity" dur="7s" repeatCount="indefinite" keyTimes="0;.13;.15;.40;.42;1" values="0;0;1;1;0;0"/>
+<circle cx="72" cy="261" r="5" fill="#ff5b4f"/><text x="88" y="266" class="m" font-size="15" fill="#ff5b4f" letter-spacing="1">ALERT</text>
+<text x="196" y="266" class="m" font-size="15" fill="#b4c0cc">T1059.001  encoded PowerShell</text></g>
+<g opacity="0"><animate attributeName="opacity" dur="7s" repeatCount="indefinite" keyTimes="0;.40;.42;.76;.78;1" values="0;0;1;1;0;0"/>
+<circle cx="72" cy="261" r="5" fill="#4da3ff"/><text x="88" y="266" class="m" font-size="15" fill="#4da3ff" letter-spacing="1">DETECTED</text>
+<text x="196" y="266" class="m" font-size="15" fill="#b4c0cc">Elastic rule fired at the SIEM</text></g>
+<g opacity="0"><animate attributeName="opacity" dur="7s" repeatCount="indefinite" keyTimes="0;.76;.78;.97;.99;1" values="0;0;1;1;0;0"/>
+<circle cx="72" cy="261" r="5" fill="#3ed68e"/><text x="88" y="266" class="m" font-size="15" fill="#3ed68e" letter-spacing="1">RESOLVED</text>
+<text x="196" y="266" class="m" font-size="15" fill="#b4c0cc">host contained, case closed</text></g>
+<g><animate attributeName="opacity" dur="7s" repeatCount="indefinite" keyTimes="0;.12;.14;.97;.99;1" values="1;1;0;0;1;1"/>
+<circle cx="72" cy="261" r="5" fill="#8d9aa8"><animate attributeName="opacity" dur="1.2s" repeatCount="indefinite" values="1;.3;1"/></circle>
+<text x="88" y="266" class="m" font-size="15" fill="#8d9aa8" letter-spacing="1">MONITORING</text><text x="216" y="266" class="m" font-size="15" fill="#8d9aa8">telemetry from 18 hosts</text></g>
+</svg>
