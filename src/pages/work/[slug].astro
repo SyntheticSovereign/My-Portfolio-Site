@@ -70,8 +70,8 @@ const img = (name: string) => Object.entries(shots).find(([k]) => /\/([^/]+)\.(p
             {s.images && (
               <div class="shots">
                 {s.images.map((im) => (
-                  <a class="figure shot-link" href={img(im.src)!.src} target="_blank" rel="noopener">
-                    <Image src={img(im.src)!} alt={im.alt} widths={[480, 800, 1280]} sizes="(max-width: 860px) 100vw, 45vw" />
+                  <a class:list={['figure shot-link', { whole: im.uncropped }]} href={img(im.src)!.src} target="_blank" rel="noopener">
+                    <Image src={img(im.src)!} alt={im.alt} widths={[640, 1100, 1600, 2200]} sizes="(max-width: 860px) 100vw, 1100px" quality={90} />
                     <span class="visually-hidden">Open full size</span>
                   </a>
                 ))}
@@ -237,6 +237,12 @@ const img = (name: string) => Object.entries(shots).find(([k]) => /\/([^/]+)\.(p
     height: 100%;
     object-fit: cover;
     object-position: left top;
+  }
+  .shots > .figure.shot-link.whole {
+    aspect-ratio: auto;
+  }
+  .shots > .whole :global(img) {
+    height: auto;
   }
   .shot-link {
     cursor: zoom-in;

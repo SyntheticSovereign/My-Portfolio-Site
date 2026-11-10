@@ -369,6 +369,7 @@ export const path: PathEntry[] = [
 export interface CaseImage {
   src: string;
   alt: string;
+  uncropped?: boolean;
 }
 
 export interface CaseFile {
@@ -449,7 +450,7 @@ export const cases: CaseFile[] = [
         ],
         images: [
           { src: 'openaev-overview', alt: 'OpenAEV adversarial exposure overview: 873 attack injects, 853 detected, 100% prevention and detection resilience, and MITRE ATT&CK coverage across the kill chain.' },
-          { src: 'openaev-scenario', alt: 'An OpenAEV threat-actor scenario with its injects laid out across MITRE ATT&CK tactics and a 100% detection result.' },
+          { src: 'openaev-scenario', alt: 'The OpenAEV Sandworm APT44 Windows destructive intrusion chain: 29 injects laid out across 13 MITRE ATT&CK tactics, with 100% prevention and detection resilience.' },
           { src: 'opencti-dashboard', alt: 'OpenCTI dashboard with 260 intrusion sets, 1.09K malware entries, 51.12K indicators, the most active threat actors and a map of targeted countries.' },
         ],
       },
@@ -501,6 +502,9 @@ export const cases: CaseFile[] = [
           'OpenTelemetry carries two signals with different jobs. Security events in OTLP logs are the evidence the validation collector trusts, while traces are kept for explanation and never decide a result. Both pass through an OpenTelemetry Collector and mutual TLS into separate daily AegisForge indices.',
           'The AI collector resolves each OpenAEV test from that evidence by matching its marker, the AegisForge AI detection ID, the ATLAS technique and the execution window. It fails closed when anything is ambiguous, and prompt content never leaves the gateway.',
           'A direct prompt-injection test was blocked before it reached the model, and OpenAEV confirmed both the detection and the prevention. Exercises are mapped to MITRE ATLAS.',
+        ],
+        images: [
+          { src: 'atlas-scenario', uncropped: true, alt: 'An OpenAEV AI red-team scenario mapped to MITRE ATLAS: prompt injection, RAG poisoning, jailbreak and system-prompt extraction techniques across eight tactics, with a 100% detection result.' },
         ],
       },
       {
