@@ -47,7 +47,13 @@ export function initSound() {
 type Tone = 'alert' | 'detect' | 'click';
 
 export function blip(kind: Tone) {
-  if (!enabled || !ctx || ctx.state !== 'running') return;
+  if (!enabled || !ctx) return;
+  // The unlocking gesture's resume() is still pending on the first click, so play once it lands
+  if (ctx.state === 'suspended' && navigator.userActivation?.isActive) {
+    void ctx.resume().then(() => ctx?.state === 'running' && blip(kind));
+    return;
+  }
+  if (ctx.state !== 'running') return;
   const t = ctx.currentTime;
   const osc = ctx.createOscillator();
   const gain = ctx.createGain();
